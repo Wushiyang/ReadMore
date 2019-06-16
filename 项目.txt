@@ -1,11 +1,11 @@
-mongodb ʹ�÷ǹ�ϵ���ĵ����ݿ� ��߶�ȡ�ٶ�
-node 	ʹ��io�ܼ��ͺ�̨
-express ����·��
-resfultAPI �淶api
-pm2	�����ػ�
-react-native ����app�ˣ�android��ios(����ʹ�ú�ƻ��)��
+mongodb 使用非关系型文档数据库 提高读取速度
+node 	使用io密集型后台
+express 处理路由
+resfultAPI 规范api
+pm2	进程守护
+react-native 开发app端（android、ios(考虑使用黑苹果)）
 react-navigator
-vue	������̨
+vue	开发后台
 
-���ǵ������ip��ʹ��ip����
-������ʹ��node�����ڿ������Ŵ���python���棬���̼�ͨ�š�
+考虑到爬虫封ip，使用ip代理
+爬虫先使用node，后期可以试着搭配python爬虫，进程间通信。
