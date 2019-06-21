@@ -1,10 +1,11 @@
 const child_process = require('child_process')
 const path = require('path')
 const fs = require('fs')
+const utils = require('./utils')
 let config
 
-console.log('crawler启动')
-
+console.log('crawler 开启')
+//异步读取config
 fs.readFile(path.join(__dirname, './config.json'), {
     encoding: 'utf8'
 }, (err, data) => {
@@ -16,6 +17,7 @@ fs.readFile(path.join(__dirname, './config.json'), {
     }
 })
 
+//初始化config
 function initConfig(data){
     config = JSON.parse(data)
     const downloadPath = path.join(__dirname, config.downloadPath)
@@ -34,15 +36,19 @@ function initConfig(data){
     }
 }
 
+//启动excutor子线程
 function launch() {
 
     let excutor = child_process.fork(path.join(__dirname,'./excutors/index.js'))
 
     excutor.on('message', (data) => {
-        console.log(data)
         if (data.type === 'hadInit') {
             console.log('[crawler.excutor] had started')
-            excutor.send({type: 'exec', url: 'https://book.qidian.com/info/1014130981#Catalog'})
+            excutor.send({type: 'exec', exec: 'qidian', url: 'https://book.qidian.com/info/1014130981#Catalog'})
+        }
+
+        if (data.type === 'data') {
+            executeData(data.data)
         }
 
         if (data.type === 'msg') {
@@ -52,5 +58,39 @@ function launch() {
     excutor.send({
         type: 'config',
         data: config
+    })
+}
+
+function executeData(data){
+    let date = new Date()
+    let y = date.getFullYear()
+    let m = utils.addZero(date.getMonth() + 1)
+    let d = date.getDate()
+    let dir = path.join(config.downloadPath, `./${y}`)
+
+    //保存原本到本地
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir)
+    }
+    dir += `/${m}`
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir)
+    }
+    dir += `/${d}`    
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir)
+    }
+    let dir2 = dir + `/${y}${m}${d}-${data.source}-${data.title}-dbdata.json`
+    dir += `/${y}${m}${d}-${data.source}-${data.title}.json`
+    fs.writeFile(dir, JSON.stringify(data.raw, "", "\t"), (err) => {
+        if (err) {
+            console.error(err)
+        }
+    })
+    //上传到服务器
+    fs.writeFile(dir2, JSON.stringify(data.dbdata, "", "\t"), (err) => {
+        if (err) {
+            console.error(err)
+        }
     })
 }

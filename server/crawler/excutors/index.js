@@ -7,22 +7,23 @@ process.on('message', (data) => {
     
     if (!hadInit && data.type === 'config') {
         config = data.data
+        run()
     } else {
         //开始处理
-        if (typeof excutors[data.type] !== 'undefined') {
-            /**
-             * 
-             * excute
-             * 
-             */
-            excutors[data.type](manager)
+        if (typeof excutors[data.exec] !== 'undefined') {
+
+            excutors[data.exec](crawler.queue.bind(crawler), data.url).then((res) => {
+                process.send({
+                    type: 'data',
+                    data: res
+                })
+            })
+
         } else {
             console.error('excutor not existed')
         }
     }
 })
-
-run()
 
 async function run(){
     startCrawler()
@@ -58,10 +59,20 @@ function loadExcutors(){
             }
             files.forEach((val) => {
                 if (val.isDirectory()) {
-                    excutors[val.name] = require(`./${val.name}/exec`)
+                    excutors[val.name] = require(`./${val.name}/index`)
                 }
             })
             resolve()
         })
     })
 }
+
+/**
+ * excutors return 
+ * {
+ *  raw: raw,
+ *  dbdata: dbdata,
+ *  source: qidian,
+ *  title: title
+ * }
+ */
