@@ -1,19 +1,67 @@
 // const qidian = require('./qidian')
-const path = require('path')
+const Crawler = require('crawler')
 const fs = require('fs')
-const filename = path.basename(__filename)
+let excutors = {}, hadInit = false, crawler, config
 
-module.exports = new Promise( resolve => {
-    let excutors = []
-    fs.readdir(__dirname, (err, files) => {
-        if (err) {
-            throw err
+process.on('message', (data) => {
+    
+    if (!hadInit && data.type === 'config') {
+        config = data.data
+    } else {
+        //开始处理
+        if (typeof excutors[data.type] !== 'undefined') {
+            /**
+             * 
+             * excute
+             * 
+             */
+            excutors[data.type](manager)
+        } else {
+            console.error('excutor not existed')
         }
-        files.forEach(val => {
-            if (val != filename) {
-                excutors.push(require(path.join(__dirname, val)))
-            }
-        })
-        resolve(excutors)
-    })
+    }
 })
+
+run()
+
+async function run(){
+    startCrawler()
+    await loadExcutors()
+    console.log(excutors)
+
+    hadInit = true
+    process.send({
+        type: 'hadInit'
+    })
+}
+
+function startCrawler(){
+    crawler = new Crawler({
+        maxConnections : config.maxConnections,
+        callback : function (error, res, done) {
+            if (error) {
+                console.log(error)
+            } else {
+                console.log('had crawler success!')
+                console.log('more operation at excutors!')
+            }
+            done()
+        }
+    })
+}
+
+function loadExcutors(){
+    return new Promise(resolve => {
+        fs.readdir(__dirname, { withFileTypes: true }, (err, files) => {
+            if (err) {
+                console.error(err)
+            }
+            files.forEach((val) => {
+                if (val.isDirectory()) {
+                    excutors[val.name] = require(`./${val.name}/exec`)
+                }
+            })
+            resolve()
+        })
+    })
+}

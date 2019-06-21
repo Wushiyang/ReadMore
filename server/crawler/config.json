@@ -1,4 +1,5 @@
 {
-    "filesPath": "./file",
+    "downloadPath": "../downloadFile",
+    "allowCreateDirectory": true,
     "maxConnections": 10
 }

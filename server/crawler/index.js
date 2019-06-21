@@ -1,7 +1,9 @@
-const Crawler = require('crawler')
+const child_process = require('child_process')
 const path = require('path')
 const fs = require('fs')
 let config
+
+console.log('crawler启动')
 
 fs.readFile(path.join(__dirname, './config.json'), {
     encoding: 'utf8'
@@ -9,58 +11,46 @@ fs.readFile(path.join(__dirname, './config.json'), {
     if (err) {
         throw err
     } else {
-        config = JSON.parse(data)
-        // global
-        init()
+        initConfig(data)
+        launch()
     }
 })
 
-
-function init() {
-    let c = new Crawler({
-        maxConnections : config.maxConnections,
-        callback : function (error, res, done) {
-            if (error) {
-                console.log(error)
-            } else {
-                console.log('had crawler success!')
-                console.log('more operation at excutors!')
-            }
-            done()
-        }
-    })
-
-    require('./excutors').then((res) => {
-        start(res)
-    }).catch(rej => {
-        console.error('excutors launch fail')
-    })
-}
-
-function start (excutors) {
-    excutors.forEach((val, ind) => {
-        if (typeof val === 'object') {
-            if (val.launch) {
-                excute(val)
+function initConfig(data){
+    config = JSON.parse(data)
+    const downloadPath = path.join(__dirname, config.downloadPath)
+    config.downloadPath = downloadPath
+    //判断下载目录是否存在，不存在如允许创建目录的话就创建目录
+    if (!fs.existsSync(downloadPath)) {
+        if (config.allowCreateDirectory) {
+            try{
+                fs.mkdirSync(downloadPath)
+            }catch(e){
+                throw e
             }
         } else {
-            console.error('excutor must be a object!')
+            console.error(`not exist directory: ${downloadPath}`)
+        }
+    }
+}
+
+function launch() {
+
+    let excutor = child_process.fork(path.join(__dirname,'./excutors/index.js'))
+
+    excutor.on('message', (data) => {
+        console.log(data)
+        if (data.type === 'hadInit') {
+            console.log('[crawler.excutor] had started')
+            excutor.send({type: 'exec', url: 'https://book.qidian.com/info/1014130981#Catalog'})
+        }
+
+        if (data.type === 'msg') {
+            console.log(data.data)
         }
     })
-
-    function excute(excutor){
-        let option = {
-            uri: excutor.uri
-        }
-        if (typeof excutor.encoding === 'undefined') {
-            option.callback = excutor.callback
-        }
-        if (typeof excutor.encoding === 'undefined') {
-            option.encoding = excutor.encoding
-        }
-        if (typeof excutor.jQuery === 'undefined') {
-            option.jQuery = excutor.jQuery
-        }    
-        c.queue(option)
-    }
+    excutor.send({
+        type: 'config',
+        data: config
+    })
 }
