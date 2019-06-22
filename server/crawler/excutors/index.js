@@ -12,7 +12,7 @@ process.on('message', (data) => {
         //开始处理
         if (typeof excutors[data.exec] !== 'undefined') {
 
-            excutors[data.exec](crawler.queue.bind(crawler), data.url).then((res) => {
+            excutors[data.exec](crawler.queue.bind(crawler), data.url, data.bid, data.cid, data.cind).then((res) => {
                 process.send({
                     type: 'data',
                     data: res
@@ -70,9 +70,13 @@ function loadExcutors(){
 /**
  * excutors return 
  * {
- *  raw: raw,
- *  dbdata: dbdata,
- *  source: qidian,
- *  title: title
+ *   raw: res,
+ *   curl: url,
+ *   cid: null,
+ *   bid: null,                            
+ *   insert: 'book_info',
+ *   dbdata: dbdata,
+ *   source: 'qidian',
+ *   title: 《${title}》
  * }
  */

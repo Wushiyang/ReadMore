@@ -1,5 +1,6 @@
 {
     "downloadPath": "../downloadFile",
     "allowCreateDirectory": true,
-    "maxConnections": 10
+    "maxConnections": 10,
+    "dataUrl": "mongodb://localhost:27017"
 }

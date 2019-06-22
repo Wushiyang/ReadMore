@@ -2,7 +2,8 @@ const child_process = require('child_process')
 const path = require('path')
 const fs = require('fs')
 const utils = require('./utils')
-let config
+const { MongoClient, ObjectId, DBRef } = require('mongodb')
+let config, excutor
 
 console.log('crawler 开启')
 //异步读取config
@@ -39,17 +40,17 @@ function initConfig(data){
 //启动excutor子线程
 function launch() {
 
-    let excutor = child_process.fork(path.join(__dirname,'./excutors/index.js'))
+    excutor = child_process.fork(path.join(__dirname,'./excutors/index.js'))
 
     excutor.on('message', (data) => {
         if (data.type === 'hadInit') {
             console.log('[crawler.excutor] had started')
-            excutor.send({type: 'exec', exec: 'qidian', url: 'https://book.qidian.com/info/1014130981#Catalog'})
+            excutor.send({type: 'exec', exec: 'qidian', url: 'https://book.qidian.com/info/1014130981#Catalog', bid: '5d0d8ddbd598e02784da8857', cid: null, cind: null})
         }
 
         if (data.type === 'data') {
             executeData(data.data)
-        }
+      }
 
         if (data.type === 'msg') {
             console.log(data.data)
@@ -80,7 +81,7 @@ function executeData(data){
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir)
     }
-    let dir2 = dir + `/${y}${m}${d}-${data.source}-${data.title}-dbdata.json`
+    // let dir2 = dir + `/${y}${m}${d}-${data.source}-${data.title}-dbdata.json`
     dir += `/${y}${m}${d}-${data.source}-${data.title}.json`
     fs.writeFile(dir, JSON.stringify(data.raw, "", "\t"), (err) => {
         if (err) {
@@ -88,9 +89,36 @@ function executeData(data){
         }
     })
     //上传到服务器
-    fs.writeFile(dir2, JSON.stringify(data.dbdata, "", "\t"), (err) => {
-        if (err) {
-            console.error(err)
+    MongoClient.connect(config.dataUrl, { useNewUrlParser: true }, function(err, db) {
+        if (err) throw err;
+        let database = db.db("ReadMe")
+        if (data.insert === 'book_info') {
+            let bid = data.bid ? new ObjectId(data.bid) : new ObjectId()
+            let cid = null
+
+            database.collection('book_info').updateOne( { _id: bid }, { $set: { ...data.dbdata } }, { upsert: true, }).then( (res) => {
+                database.collection('book_info').find({ _id: bid }).toArray((err, docs) => {
+                    if (err) {
+                        console.error(err)
+                    }
+                    let catalog = docs[0].catalog
+                    catalog.forEach((val, ind) => {
+                        excutor.send({type: 'exec', exec: data.source, url: val.uri, bid: bid, cid: cid, cind: ind})
+                    })
+                })
+            })
         }
-    })
+        if (data.insert === 'book_content') {
+            let cid = data.cid ? new ObjectId(data.cid) : new ObjectId()
+            let bid = new ObjectId(data.bid)
+            let cind = data.cind
+            data.dbdata.create_time = Date.now()
+            database.collection('book_content').updateOne( { _id: cid }, { $set: data.dbdata }, {upsert:true} ).then( (res) => {
+                if (cind != null) {
+                    database.collection('book_info').updateOne ( { _id: bid }, { $set: { [`catalog.${cind}.chapter`]: cid } }, (res) => {
+                    }) 
+                }
+            })
+        }
+    });
 }

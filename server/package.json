@@ -1,5 +1,6 @@
 {
   "devDependencies": {
-    "crawler": "^1.2.1"
+    "crawler": "^1.2.1",
+    "mongodb": "^3.2.7"
   }
 }
