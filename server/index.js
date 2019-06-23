@@ -1,11 +1,36 @@
 // const child_process = require('child_process');
 const  { Worker } = require('worker_threads')
-const http = require('http')
+const express = require('express')
 const fs = require('fs')
 const path = require('path')
-const server = http.createServer((req, res) => {
 
-    console.log(req)
+const app = express()
+
+const Log = function (req, res, next) {
+    console.log('LOGGED')
+    next()
+}
+
+const requestTime = function (req, res, next) {
+    req.requestTime = Date.now()
+    next()
+}
+
+app.use(requestTime)
+
+app.METHOD('/', (req, res) => {
+    let responseText = 'Hello world!!!<br/>'
+    responseText += `<small>Request at: ${req.requestTime}<small>`
+    res.send(responseText)
+})
+
+
+const server = app.listen(5041, 'localhost', () => {
+    let address = server.address()
+    console.log(`server run at ${address.address}:${address.port}`)
+})
+
+function crawlerLaunch(){
     let crawler = new Worker('./crawler/index.js')
     crawler.on('message', value => {
         console.log(value)
@@ -19,10 +44,4 @@ const server = http.createServer((req, res) => {
     crawler.on('online', () => {
         console.log(`crawler had connected`)
     })
-
-    res.end('结束')
-})
-server.listen(5041, 'localhost', () => {
-    let address = server.address()
-    console.log(`server run at ${address.address}:${address.port}`)
-})
+}
