@@ -1,9 +1,0 @@
-{
-  "devDependencies": {
-    "crawler": "^1.2.1",
-    "mongodb": "^3.2.7"
-  },
-  "dependencies": {
-    "express": "^4.17.1"
-  }
-}
