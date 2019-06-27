@@ -1,4 +1,4 @@
-import config from './config'
+import { svcfg } from './config'
 import router from './router/index'
 import express = require('express')
 import net = require('net')
@@ -14,7 +14,7 @@ class Web{
     run() {
         const app = this.app
         app.use('/', router)
-        const server = app.listen(config.port, config.host, () => {
+        const server = app.listen(svcfg.port, svcfg.host, () => {
             const address = <net.AddressInfo>server.address()
             console.log(`server run at ${address.address}:${address.port}`)
         })
