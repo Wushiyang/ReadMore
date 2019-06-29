@@ -4,5 +4,6 @@ export const svcfg = {
 }
 export const dbcfg = {
     host: 'localhost',
-    port: 27017
+    port: 27017,
+    db: 'ReadMore'
 }
