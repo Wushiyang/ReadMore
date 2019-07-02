@@ -1,0 +1,1 @@
+export { pTd } from './fit'

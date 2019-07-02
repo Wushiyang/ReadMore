@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "react-native-cli": "^2.0.1"
+  },
+  "scripts": {
+    "build": "react-native init ReadMore"
+  }
+}
