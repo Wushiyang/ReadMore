@@ -20,7 +20,12 @@ const TabNavigator = createBottomTabNavigator(
 			screen: BookShelf,
 			navigationOptions: {
 				title: '书架',
-				tabBarIcon: () => {
+				tabBarIcon: ({ focused }) => {
+					if (focused) {
+						return (
+							<Image source={require('./src/assets/icon-bookshelf-red.png')} style={styles.tabIcon}/>
+						)
+					}
 					return (
 						<Image source={require('./src/assets/icon-bookshelf.png')} style={styles.tabIcon}/>
 					)
@@ -31,7 +36,12 @@ const TabNavigator = createBottomTabNavigator(
 			screen: BookShop,
 			navigationOptions: {
 				title: '书城',
-				tabBarIcon: () => {
+				tabBarIcon: ({ focused }) => {
+					if (focused) {
+						return (
+							<Image source={require('./src/assets/icon-bookshop-red.png')} style={styles.tabIcon}/>
+						)
+					}
 					return (
 						<Image source={require('./src/assets/icon-bookshop.png')} style={styles.tabIcon}/>
 					)
@@ -42,7 +52,12 @@ const TabNavigator = createBottomTabNavigator(
 			screen: PersonalCenter,
 			navigationOptions: {
 				title: '我的',
-				tabBarIcon: () => {
+				tabBarIcon: ({ focused }) => {
+					if (focused) {
+						return (
+							<Image source={require('./src/assets/icon-my-red.png')} style={styles.tabIcon}/>
+						)
+					}
 					return (
 						<Image source={require('./src/assets/icon-my.png')} style={styles.tabIcon}/>
 					)
@@ -51,14 +66,31 @@ const TabNavigator = createBottomTabNavigator(
 		}
 	},
 	{
-		initialRouteName: 'bookshop'
+		initialRouteName: 'bookshop',
+		tabBarOptions: {
+			activeTintColor: '#d81e06',
+			inactiveTintColor: '#bfbfbf',
+			style: {
+				height: pTd(115),
+				paddingTop: pTd(15),
+				paddingBottom: pTd(15)
+			},
+			iconStyle: {
+				// marginBottom: pTd(10)
+			},
+			labelStyle: {
+				marginTop: pTd(10),
+				lineHeight: pTd(25),
+				fontSize: pTd(20)
+			}
+		}
 	}
 );
 
 const styles = StyleSheet.create({
 	tabIcon: {
-		width: pTd(40),
-		height: pTd(40)
+		width: pTd(50),
+		height: pTd(50)
 	}
 })
 
