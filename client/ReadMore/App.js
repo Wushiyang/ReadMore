@@ -7,12 +7,14 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image} from 'react-native';
+import {Platform, StyleSheet, Image} from 'react-native';
 import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation'
 import BookShelf from './src/pages/BookShelf'
 import BookShop from './src/pages/BookShop'
 import PersonalCenter from './src/pages/PersonalCenter'
 import { pTd } from './src/assets/js/utils'
+import ReadPage from './src/pages/ReadPage'
+import NavigationService from './NavigationService'
 
 const TabNavigator = createBottomTabNavigator(
 	{
@@ -87,6 +89,21 @@ const TabNavigator = createBottomTabNavigator(
 	}
 );
 
+const stackNavigator = createStackNavigator(
+	{
+		main: {
+			screen: TabNavigator
+		},
+		readpage: {
+			screen: ReadPage
+		}
+	},
+	{
+		initialRouteName: 'main',
+		headerMode: 'none'
+	}
+)
+
 const styles = StyleSheet.create({
 	tabIcon: {
 		width: pTd(50),
@@ -94,12 +111,15 @@ const styles = StyleSheet.create({
 	}
 })
 
-const AppContainer = createAppContainer(TabNavigator)
+const AppContainer = createAppContainer(stackNavigator)
 
 export default  class App extends Component{
 	render(){
 		return (
-			<AppContainer />
+			<AppContainer 
+				ref={navigatorRef => {
+					NavigationService.setTopLevelNavigator(navigatorRef)
+				}}/>
 		)
 	}
 }
