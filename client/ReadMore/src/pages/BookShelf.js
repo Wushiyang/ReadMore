@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
-import {View, Text, ScrollView, StyleSheet, Image, TouchableHighlight, Modal, TouchableWithoutFeedback, FlatList} from 'react-native'
+import {View, Text, ScrollView, StyleSheet, Image, TouchableHighlight} from 'react-native'
 import {pTd} from '../assets/js/utils'
 import Book from '../components/Book'
 import BookServer from '../servers/BookServer'
+import DropDown from '../components/DropDown'
 
 export default class BookShelf extends Component{
     constructor(props){
@@ -38,40 +39,34 @@ export default class BookShelf extends Component{
                             style={styles.icon_wrap}
                             onPress={this.handleAdd}
                             underlayColor='#dececf'>
-                            <Image source={require('../assets/icon-add.png')} style={styles.icon}/>
+                            <View>
+                                <Image source={require('../assets/icon-add.png')} style={styles.icon}/>
+                            </View>
                         </TouchableHighlight>
-                    </View>
-                </View>
-                <View style={styles.content}>
-                    {booksList}
-                </View>
-
-                {/* <Modal 
-                    animationType='fade'
-                    visible={this.state.addModalShow}>
-                        <FlatList
+                        <DropDown 
+                            visible={this.state.addModalShow}
+                            viewStyle={styles.addDropDown}
                             data={[
                                 {
+                                    key: '0',
                                     name: '本机导入',
                                     tap: function(){
                                         alert('本机导入')
                                     }
                                 },
                                 {
+                                    key: '1',
                                     name: '我的书籍',
                                     tap: function(){
                                         alert('我的书籍')
                                     }
                                 }
-                            ]}
-                            style={styles.addModalPanel}
-                            renderItem={({item}) => (
-                                <TouchableWithoutFeedback
-                                    onPress={item.tap}>
-                                    <Text >{item.name}</Text>
-                                </TouchableWithoutFeedback>
-                            )}/>
-                </Modal> */}
+                            ]}/>
+                    </View>
+                </View>
+                <View style={styles.content}>
+                    {booksList}
+                </View>
             </ScrollView>
         )
     }
@@ -93,7 +88,8 @@ export default class BookShelf extends Component{
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#e6dbd9'
+        backgroundColor: '#e6dbd9',
+        position: 'relative'
     },
     header: {
         flexDirection: 'row',
@@ -126,10 +122,9 @@ const styles = StyleSheet.create({
     content: {
         flexDirection: 'row'
     },
-    // addModalPanel: {
-
-    // },
-    // addModalItem: {
-    //     width: pTd()
-    // }
+    addDropDown: {
+        position: 'absolute',
+        right: 0,
+        top: 0
+    }
 })
