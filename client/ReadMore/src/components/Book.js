@@ -28,7 +28,7 @@ export default class Book extends Component{
         }
         return (
             <TouchableOpacity 
-                onPress={ this.handleTap }
+                onPress={ () => this.handleTap({uri: uri, type: type}) }
                 style={styles.book}
                 activeOpacity={0.8}>
                 {content}
@@ -36,9 +36,8 @@ export default class Book extends Component{
         )
     }
 
-    handleTap(){
-        NavigationService.navigate('readpage')
-        // this.props.navigation.navigate('readpage')
+    handleTap(data){
+        NavigationService.navigate('readpage', data)
     }
 }
 

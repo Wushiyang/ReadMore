@@ -1,27 +1,37 @@
 import React, {Component} from 'react'
-import {View, Text, FlatList, StyleSheet, TouchableWithoutFeedback, Modal} from 'react-native'
+import {View, Text, FlatList, StyleSheet, TouchableWithoutFeedback, Modal, Dimensions} from 'react-native'
 import {pTd} from '../assets/js/utils'
 
+const {height, width} = Dimensions.get('window')
+
 export default class DropDown extends Component{
+
+    constructor(){
+        super()
+        this.setOpen = this.setOpen.bind(this)
+        this.setClose = this.setClose.bind(this)
+    }
+
+    state = {
+        visible: false
+    }
+
     render(){
-        const visible = this.props.visible
-        if (visible) {
-            return (
+        return (
+            <Modal
+                visible={ this.state.visible }
+                onRequestClose={ this.setClose }
+                transparent={ true }
+                animationType='fade'>
                 <TouchableWithoutFeedback
-                    onPress={ () => alert('tap')}>
-                    <Modal 
-                        style={styles.wrapper}
-                        animationType="fade"
-                        transparent={true}
-                        visible={visible}
-                        onRequestClose={() => {
-                            alert("Modal has been closed.");
-                        }}>
+                    onPress={ this.setClose }
+                    >
+                    <View style={[styles.wrapper]}>
                         <FlatList 
                         data={this.props.data}
                         style={[styles.panel, this.props.viewStyle]}
                         renderItem={
-                            ({item, index}) => (
+                            ({item}) => (
                                 <TouchableWithoutFeedback
                                     onPress={() => item.tap()}>
                                     <View style={styles.item}>
@@ -30,20 +40,33 @@ export default class DropDown extends Component{
                                 </TouchableWithoutFeedback>
                             )
                         }/>
-                    </Modal>
+                    </View>
                 </TouchableWithoutFeedback>
-            )
-        }
-        return <View />
+            </Modal>
+        )
+    }
+
+    setOpen(){
+        console.log(this)
+        this.setState({
+            visible: true
+        })
+    }
+
+    setClose(){
+        this.setState({
+            visible: false
+        })
     }
 }
+
 const styles = StyleSheet.create({
     wrapper: {
-        width: '100%',
-        height: '100%'
+        position: 'relative',
+        height: '100%',
+        width: '100%'
     },
     panel: {
-        zIndex: 1000,
         width: pTd(265),
         backgroundColor: '#fff'        
     },

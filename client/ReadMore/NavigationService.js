@@ -10,7 +10,7 @@ function navigate(routeName, params) {
     _navigator.dispatch(
         NavigationActions.navigate({
             routeName,
-            params,
+            params
         })
     );
 }

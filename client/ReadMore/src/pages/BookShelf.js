@@ -1,9 +1,36 @@
 import React, {Component} from 'react'
-import {View, Text, ScrollView, StyleSheet, Image, TouchableHighlight} from 'react-native'
+import {View, Text, ScrollView, StyleSheet, Image, TouchableHighlight, PermissionsAndroid} from 'react-native'
 import {pTd} from '../assets/js/utils'
 import Book from '../components/Book'
 import BookServer from '../servers/BookServer'
 import DropDown from '../components/DropDown'
+import NavigationServer from '../../NavigationService'
+
+async function requestFilePermission() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: '申请文件夹权限',
+          message:
+            '一个很牛逼的应用想借用你的摄像头，' +
+            '然后你就可以拍出酷炫的皂片啦。',
+          buttonNeutral: '等会再问我',
+          buttonNegative: '不行',
+          buttonPositive: '好吧',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('现在你获得文件夹权限了');
+      } else {
+        console.log('用户并不屌你');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+}
+
+requestFilePermission()
 
 export default class BookShelf extends Component{
     constructor(props){
@@ -17,9 +44,10 @@ export default class BookShelf extends Component{
     }
 
     render(){
+        let that = this
         const booksList = BookServer.getBooksList().map((val, index) => {
             return (
-                <Book name={val.name} type={val.ext} key={index}/>
+                <Book name={val.name} type={val.ext} key={index} uri={val.path}/>
             )
         })
         return (
@@ -43,38 +71,33 @@ export default class BookShelf extends Component{
                                 <Image source={require('../assets/icon-add.png')} style={styles.icon}/>
                             </View>
                         </TouchableHighlight>
-                        <DropDown 
-                            visible={this.state.addModalShow}
-                            viewStyle={styles.addDropDown}
-                            data={[
-                                {
-                                    key: '0',
-                                    name: '本机导入',
-                                    tap: function(){
-                                        alert('本机导入')
-                                    }
-                                },
-                                {
-                                    key: '1',
-                                    name: '我的书籍',
-                                    tap: function(){
-                                        alert('我的书籍')
-                                    }
-                                }
-                            ]}/>
                     </View>
                 </View>
                 <View style={styles.content}>
                     {booksList}
                 </View>
+                <DropDown
+                    ref='addPanel'
+                    viewStyle={styles.addDropDown}
+                    data={[
+                        {
+                            key: '0',
+                            name: '本机导入',
+                            tap: function(){
+                                that.refs.addPanel.setClose()
+                                NavigationServer.navigate('importpage')
+                            }
+                        },
+                        {
+                            key: '1',
+                            name: '我的书籍',
+                            tap: function(){
+                                alert('我的书籍')
+                            }
+                        }
+                    ]}/>
             </ScrollView>
         )
-    }
-
-    setAddModalVisible(visible){
-        this.setState({
-            addModalShow: visible
-        })
     }
 
     handleSearch(){
@@ -82,14 +105,13 @@ export default class BookShelf extends Component{
     }
 
     handleAdd(){
-        this.setAddModalVisible(true)
+        this.refs.addPanel.setOpen()
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#e6dbd9',
-        position: 'relative'
+        backgroundColor: '#e6dbd9'
     },
     header: {
         flexDirection: 'row',
@@ -124,7 +146,7 @@ const styles = StyleSheet.create({
     },
     addDropDown: {
         position: 'absolute',
-        right: 0,
-        top: 0
+        right: pTd(30),
+        top: pTd(42)
     }
 })

@@ -15,6 +15,7 @@ import PersonalCenter from './src/pages/PersonalCenter'
 import { pTd } from './src/assets/js/utils'
 import ReadPage from './src/pages/ReadPage'
 import NavigationService from './NavigationService'
+import ImportPage from './src/pages/ImportPage'
 
 const TabNavigator = createBottomTabNavigator(
 	{
@@ -96,6 +97,12 @@ const stackNavigator = createStackNavigator(
 		},
 		readpage: {
 			screen: ReadPage
+		},
+		importpage: {
+			screen: ImportPage,
+			navigationOptions: {
+				title: '智能导入'
+			}
 		}
 	},
 	{
