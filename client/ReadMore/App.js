@@ -90,6 +90,14 @@ const TabNavigator = createBottomTabNavigator(
 	}
 );
 
+const withHeaderNavigator = createStackNavigator(
+	{
+		importpage: {
+			screen: ImportPage
+		}
+	}
+)
+
 const stackNavigator = createStackNavigator(
 	{
 		main: {
@@ -98,11 +106,8 @@ const stackNavigator = createStackNavigator(
 		readpage: {
 			screen: ReadPage
 		},
-		importpage: {
-			screen: ImportPage,
-			navigationOptions: {
-				title: '智能导入'
-			}
+		withheader: {
+			screen: withHeaderNavigator
 		}
 	},
 	{
