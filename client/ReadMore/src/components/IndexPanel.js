@@ -34,13 +34,16 @@ export default class DropDown extends Component{
             <Modal
                 visible={ this.state.visible }
                 onRequestClose={ this.setClose }
-                transparent={ true }
+                transparent={ false }
                 animationType='fade'>
                 <TouchableWithoutFeedback
                     onPress={ this.setClose }
                     >
-                    <View style={[styles.wrapper]}>
-                        {boxes}
+                    <View style={styles.wrapper}>
+                        <View style={styles.mask}></View>
+                        <View style={styles.panel}>
+                            {boxes}
+                        </View>
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
@@ -48,7 +51,6 @@ export default class DropDown extends Component{
     }
 
     setOpen(){
-        console.log(this)
         this.setState({
             visible: true
         })
@@ -63,14 +65,24 @@ export default class DropDown extends Component{
 
 const styles = StyleSheet.create({
     wrapper: {
-        position: 'relative',
+        width: '100%',
         height: '100%',
-        width: '100%'
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative'
+    },
+    mask: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#000',
+        opacity: 0.8,
+        position: 'absolute'
     },
     panel: {
         width: pTd(626),  
         height: pTd(948),
         flexDirection: 'row',
+        flexWrap: 'wrap',
         justifyContent: "space-between",
         alignContent: 'space-between'
     }

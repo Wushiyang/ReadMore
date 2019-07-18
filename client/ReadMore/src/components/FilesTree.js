@@ -1,42 +1,41 @@
 import React,{ Component } from 'react'
-import {View, Text, StyleSheet, Image, ScrollView, TouchableWithoutFeedback, TouchableNativeFeedback, TouchableOpacity} from 'react-native'
+import {View, Text, StyleSheet, Image, ScrollView, TouchableWithoutFeedback, TouchableNativeFeedback, TouchableOpacity, FlatList} from 'react-native'
 import { pTd } from '../assets/js/fit';
 import IndexPanel from '../components/IndexPanel'
+import RNFS, { ExternalStorageDirectoryPath }from 'react-native-fs'
 
 function FileItem(props){
     let Info, Icon
     if (props.type === 'dir') {
         Info = (
-            <View>
-                <Text>{props.size} 项</Text>
-            </View>
+            <Text style={{fontSize: pTd(27), color: '#a39491'}}>{props.size} MB</Text>
         )
         Icon = (
-            <Image source={require('../assets/icon-file.png')}/>
+            <Image source={require('../assets/icon-file.png')} style={{height: pTd(57), width: pTd(57)}}/>
         )
     } else if (props.type === 'txt') {
         Info = (
-            <View>
-                <View>
-                    <Text>TXT</Text>
+            <View style={{flexDirection: 'row'}}>
+                <View style={{width: pTd(62), height: pTd(30), borderRadius: pTd(5), backgroundColor: '#7ca4d8', justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{fontSize: pTd(16), color: '#fff'}}>TXT</Text>
                 </View>
-                <Text>{props.size} MB</Text>
+                <Text style={{fontSize: pTd(20), color: '#a49997'}}>{props.size} MB</Text>
             </View>
         )
         Icon = (
-            <Image source={require('../assets/icon-file.png')}/>
-        )        
+            <Image source={require('../assets/icon-file.png')} style={{height: pTd(57), width: pTd(57)}}/>
+        )
     } else if (props.type === 'pdf'){
         Info = (
-            <View>
-                <View>
-                    <Text>PDF</Text>
+            <View style={{flexDirection: 'row'}}>
+                <View style={{width: pTd(62), height: pTd(30), borderRadius: pTd(5), backgroundColor: '#e5814f', justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{fontSize: pTd(16), color: '#fff'}}>TXT</Text>
                 </View>
-                <Text>{props.size} MB</Text>
+                <Text style={{fontSize: pTd(20), color: '#a49997'}}>{props.size} MB</Text>
             </View>
         )
         Icon = (
-            <Image source={require('../assets/icon-file.png')}/>
+            <Image source={require('../assets/icon-file.png')} style={{height: pTd(57), width: pTd(57)}}/>
         )
     } else {
         return (
@@ -46,10 +45,11 @@ function FileItem(props){
         )
     }
     return (
-        <TouchableNativeFeedback>
-            <View>
+        <TouchableNativeFeedback
+            onPress={props.fn}>
+            <View style={styles.fileItem}>
                 <View>
-                    <Text>{props.name}</Text>
+                    <Text style={{marginBottom: pTd(28), fontSize: pTd(30)}}>{props.name}</Text>
                     {Info}
                 </View>
                 {Icon}
@@ -65,17 +65,25 @@ export default class FilesTree extends Component{
         this.deleteItem = this.deleteItem.bind(this)
         this.selectAll = this.selectAll.bind(this)
     }
+
     state = {
         indexes: ['文件夹', '#', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
         index: 0,
-        selectNum: 0
+        selectNum: 0,
+        filesState: []
     }
+
+    componentWillMount(){
+        this.setFilePath(ExternalStorageDirectoryPath)
+    }
+
     render(){
+        let that = this
         const indexes = this.state.indexes.map((val, index)=>({
             name: val,
             active: index < 10 ? true : false,
             fn: function(){
-                
+                that.selectIndex(index)
             }
         }))
         return (
@@ -87,9 +95,13 @@ export default class FilesTree extends Component{
                             <Text style={{fontSize: pTd(28), color: '#a49997'}}>{this.state.indexes[this.state.index]}</Text>
                         </View>
                     </TouchableWithoutFeedback>
-                    <View>
-                        <Text>文件列表</Text>
-                    </View>
+                    <FlatList
+                            data={this.state.filesState}
+                            style={{width: '100%', paddingLeft: pTd(45), paddingRight: pTd(45), backgroundColor: '#fff'}}
+                            keyExtractor={(item, index) => (index + '')}
+                            renderItem={({item}) => (
+                                <FileItem type={item.type} size={item.size} name={item.name} fn={()=>that.setFilePath(item.path)}/>
+                            )}/>
                 </ScrollView>
                 <View style={styles.footer}>
                     <View style={styles.footer_left}>
@@ -120,13 +132,15 @@ export default class FilesTree extends Component{
                         </TouchableOpacity>
                     </View>
                 </View>
-                <IndexPanel data={}/>
+                <IndexPanel
+                    ref='filespanel'
+                    data={indexes}/>
             </View>
         )
     }
 
     selectPanel(){
-        alert('show select panel')
+        this.refs.filespanel.setOpen()
     }
 
     deleteItem(){
@@ -135,6 +149,54 @@ export default class FilesTree extends Component{
 
     selectAll(){
         alert('select all')
+    }
+
+    selectIndex(index){
+        this.refs.filespanel.setClose()
+        this.setState({
+            index: index
+        })
+    }
+
+    setFilePath(path){
+        let that = this
+        this.props.setPath(path)
+        RNFS.readDir(path).then(result => {
+            let filesState = []
+            result.forEach(val => {
+                if (val.isDirectory()) {
+                    filesState.push({
+                        path: val.path,
+                        name: val.name,
+                        type: 'dir',
+                        size: val.size/(1024*1024)
+                    })
+                }
+                if (val.isFile()) {
+                    const name = val.name
+                    if (/\.txt$/.test(name)) {
+                        filesState.push({
+                            path: val.path,                                
+                            name: name,                            
+                            type: 'txt',
+                            size: val.size/(1024*1024)
+                        })
+                    } else if (/\.pdf$/.test(name)) {
+                        filesState.push({
+                            path: val.path,                                
+                            name: name,                            
+                            type: 'pdf',
+                            size: val.size/(1024*1024)
+                        })
+                    }
+                }
+            })
+            that.setState({
+                filesState: filesState
+            })
+        }).catch(error => {
+            console.log(error)
+        })
     }
 }
 
@@ -145,7 +207,8 @@ const styles = StyleSheet.create({
     },
     scroll: {
         flex: 1,
-        backgroundColor: 'red',        
+        width: '100%',
+        marginBottom: pTd(100) 
     },
     header: {
         paddingLeft: pTd(40),
@@ -171,5 +234,14 @@ const styles = StyleSheet.create({
     footer_right: {
         flexDirection: 'row',
         alignItems: 'center'        
+    },
+    fileItem: {
+        height: pTd(136),
+        width: '100%',
+        borderTopWidth: 1,
+        borderTopColor: '#d3c4bf',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     }
 })

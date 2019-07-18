@@ -45,7 +45,6 @@ export default class DropDown extends Component{
     }
 
     setOpen(){
-        console.log(this)
         this.setState({
             visible: true
         })

@@ -12,9 +12,7 @@ async function requestFilePermission() {
         PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
         {
           title: '申请文件夹权限',
-          message:
-            '一个很牛逼的应用想借用你的摄像头，' +
-            '然后你就可以拍出酷炫的皂片啦。',
+          message: '一个很牛逼的应用想读取你的文件',
           buttonNeutral: '等会再问我',
           buttonNegative: '不行',
           buttonPositive: '好吧',
