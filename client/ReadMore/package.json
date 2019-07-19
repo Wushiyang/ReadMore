@@ -12,6 +12,7 @@
     "link_rnfs": "react-native link react-native-fs"
   },
   "dependencies": {
+    "pinyin": "^2.9.0",
     "react": "16.8.3",
     "react-native": "0.59.9",
     "react-native-fs": "^2.13.3",

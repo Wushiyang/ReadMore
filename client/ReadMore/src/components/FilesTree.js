@@ -8,7 +8,8 @@ function FileItem(props){
     let Info, Icon
     if (props.type === 'dir') {
         Info = (
-            <Text style={{fontSize: pTd(27), color: '#a39491'}}>{props.size} MB</Text>
+            // <Text style={{fontSize: pTd(27), color: '#a39491'}}>{props.size} MB</Text>
+            <Text style={{fontSize: pTd(0)}}></Text>
         )
         Icon = (
             <Image source={require('../assets/icon-file.png')} style={{height: pTd(57), width: pTd(57)}}/>
@@ -161,9 +162,25 @@ export default class FilesTree extends Component{
     setFilePath(path){
         let that = this
         this.props.setPath(path)
+        // const indexes = this.state.indexes
         RNFS.readDir(path).then(result => {
             let filesState = []
             result.forEach(val => {
+
+                // for(let i = 0; i < indexes.length; i++) {
+                //     if (val.isDirectory()) {
+                //         filesState.push({
+                //             title: indexes[0],
+                //             data: {
+                //                 path: val.path,
+                //                 name: val.name,
+                //                 type: 'dir',
+                //                 size: val.size/(1024*1024)
+                //             }
+                //         })
+                //     }
+                // }
+
                 if (val.isDirectory()) {
                     filesState.push({
                         path: val.path,
