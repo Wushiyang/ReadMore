@@ -1,10 +1,11 @@
 import React,{ Component } from 'react'
 import {View, Text, StyleSheet, Button, Image, ScrollView, TouchableWithoutFeedback} from 'react-native'
 import { pTd } from '../assets/js/fit';
-import { GoBack } from '../components/common'
-import FilesTree from '../components/FilesTree'
 import { ExternalStorageDirectoryPath } from 'react-native-fs'
 import NavigationServer from '../../NavigationService'
+
+import { GoBack } from '../components/common'
+import FilesTree from '../components/FilesTree'
 
 export default class ImportPage extends Component{
     static navigationOptions = {

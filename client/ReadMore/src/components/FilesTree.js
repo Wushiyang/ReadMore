@@ -1,8 +1,8 @@
 import React,{ Component } from 'react'
-import {View, Text, StyleSheet, Image, ScrollView, TouchableWithoutFeedback, TouchableNativeFeedback, TouchableOpacity, FlatList} from 'react-native'
-import { pTd } from '../assets/js/fit';
-import IndexPanel from '../components/IndexPanel'
+import {View, Text, StyleSheet, Image, ScrollView, TouchableWithoutFeedback, TouchableNativeFeedback, TouchableOpacity, SectionList} from 'react-native'
+import { pTd, fitIndex } from '../assets/js/utils';
 import RNFS, { ExternalStorageDirectoryPath }from 'react-native-fs'
+import IndexPanel from '../components/IndexPanel'
 
 function FileItem(props){
     let Info, Icon
@@ -96,8 +96,8 @@ export default class FilesTree extends Component{
                             <Text style={{fontSize: pTd(28), color: '#a49997'}}>{this.state.indexes[this.state.index]}</Text>
                         </View>
                     </TouchableWithoutFeedback>
-                    <FlatList
-                            data={this.state.filesState}
+                    <SectionList
+                            sections={this.state.filesState}
                             style={{width: '100%', paddingLeft: pTd(45), paddingRight: pTd(45), backgroundColor: '#fff'}}
                             keyExtractor={(item, index) => (index + '')}
                             renderItem={({item}) => (
@@ -162,54 +162,116 @@ export default class FilesTree extends Component{
     setFilePath(path){
         let that = this
         this.props.setPath(path)
-        // const indexes = this.state.indexes
+        const indexes = this.state.indexes
+        let fileMap = new Map()
         RNFS.readDir(path).then(result => {
-            let filesState = []
-            result.forEach(val => {
-
-                // for(let i = 0; i < indexes.length; i++) {
-                //     if (val.isDirectory()) {
-                //         filesState.push({
-                //             title: indexes[0],
-                //             data: {
-                //                 path: val.path,
-                //                 name: val.name,
-                //                 type: 'dir',
-                //                 size: val.size/(1024*1024)
-                //             }
-                //         })
-                //     }
-                // }
-
-                if (val.isDirectory()) {
-                    filesState.push({
-                        path: val.path,
-                        name: val.name,
-                        type: 'dir',
-                        size: val.size/(1024*1024)
-                    })
-                }
-                if (val.isFile()) {
-                    const name = val.name
-                    if (/\.txt$/.test(name)) {
-                        filesState.push({
-                            path: val.path,                                
-                            name: name,                            
-                            type: 'txt',
-                            size: val.size/(1024*1024)
-                        })
-                    } else if (/\.pdf$/.test(name)) {
-                        filesState.push({
-                            path: val.path,                                
-                            name: name,                            
-                            type: 'pdf',
-                            size: val.size/(1024*1024)
-                        })
+            try {
+                result.forEach(val => {
+                    const capital = fitIndex(val.name)
+                    for(let i = 0; i < indexes.length; i++) {
+                        //文件夹处理
+                        if (val.isDirectory()) {
+                            let data = {
+                                path: val.path,
+                                name: val.name,
+                                type: 'dir',
+                                size: val.size/(1024*1024) 
+                            }
+                            if (fileMap.has('文件夹')) {
+                                data = [
+                                    ...fileMap.get('文件夹')
+                                ]
+                                data.push(
+                                    {
+                                        title: '文件夹',
+                                        data: data
+                                    }
+                                )
+                                fileMap.set('文件夹', data)
+                            } else {
+                                fileMap.set('文件夹', [
+                                    {
+                                        title: '文件夹',
+                                        data: data
+                                    }
+                                ])
+                            }
+                            break
+                        //文件处理
+                        } else {
+                            if (capital === indexes[i]) {
+                                let data
+                                if (/\.txt$/.test(name)) {
+                                    data = {
+                                        path: val.path,
+                                        name: name,
+                                        type: 'txt',
+                                        size: val.size/(1024*1024)
+                                    }
+                                } else if (/\.pdf$/.test(name)) {
+                                    data = {
+                                        path: val.path,                                
+                                        name: name,                            
+                                        type: 'pdf',
+                                        size: val.size/(1024*1024)
+                                    }
+                                }
+                                if (fileMap.has(capital)) {
+                                    data = [
+                                        ...fileMap.get(capital)
+                                    ]
+                                    data.push(
+                                        {
+                                            title: capital,
+                                            data: data
+                                        }
+                                    )
+                                    fileMap.set(capital, data)
+                                } else {
+                                    fileMap.set(capital, [
+                                        {
+                                            title: capital,
+                                            data: data
+                                        }
+                                    ])
+                                }
+                                break
+                            }
+                        }
                     }
-                }
-            })
+                    // if (val.isDirectory()) {
+                    //     filesState.push({
+                    //         path: val.path,
+                    //         name: val.name,
+                    //         type: 'dir',
+                    //         size: val.size/(1024*1024)
+                    //     })
+                    // }
+                    // if (val.isFile()) {
+                    //     const name = val.name
+                    //     if (/\.txt$/.test(name)) {
+                    //         filesState.push({
+                    //             path: val.path,                                
+                    //             name: name,                            
+                    //             type: 'txt',
+                    //             size: val.size/(1024*1024)
+                    //         })
+                    //     } else if (/\.pdf$/.test(name)) {
+                    //         filesState.push({
+                    //             path: val.path,                                
+                    //             name: name,                            
+                    //             type: 'pdf',
+                    //             size: val.size/(1024*1024)
+                    //         })
+                    //     }
+                    // }
+                })
+            } catch (e) {
+                console.error(e)
+            }
+
             that.setState({
-                filesState: filesState
+                filesState: [...fileMap.values()]
             })
         }).catch(error => {
             console.log(error)
