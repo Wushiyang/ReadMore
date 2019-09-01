@@ -5,6 +5,8 @@ import Book from '../components/Book'
 import BookServer from '../servers/BookServer'
 import DropDown from '../components/DropDown'
 import NavigationServer from '../../NavigationService'
+import {connect} from 'react-redux'
+import {addBooksList} from '../redux/actions'
 
 async function requestFilePermission() {
     try {
@@ -30,24 +32,21 @@ async function requestFilePermission() {
 
 requestFilePermission()
 
-export default class BookShelf extends Component{
+class BookShelf extends Component{
     constructor(props){
         super()
+        this.addPanel = null
         this.handleSearch = this.handleSearch.bind(this)
         this.handleAdd = this.handleAdd.bind(this)
     }
 
-    state = {
-        addModalShow: false
+    async componentDidMount(){
+        const booksList = await BookServer.getBooksList()
+        this.props.addBooksList(booksList)
     }
 
     render(){
         let that = this
-        const booksList = BookServer.getBooksList().map((val, index) => {
-            return (
-                <Book name={val.name} type={val.ext} key={index} uri={val.path}/>
-            )
-        })
         return (
             <ScrollView style={styles.container}>
                 <View style={styles.header}>
@@ -72,17 +71,21 @@ export default class BookShelf extends Component{
                     </View>
                 </View>
                 <View style={styles.content}>
-                    {booksList}
+                    {this.props.booksList.map((val, index) => {
+                        return (
+                            <Book name={val.name} type={val.ext} key={index} uri={val.path}/>
+                        )
+                    })}
                 </View>
                 <DropDown
-                    ref='addPanel'
+                    ref={(addPanel) => this.addPanel = addPanel}
                     viewStyle={styles.addDropDown}
                     data={[
                         {
                             key: '0',
                             name: '本机导入',
                             tap: function(){
-                                that.refs.addPanel.setClose()
+                                that.addPanel.setClose()
                                 NavigationServer.navigate('importpage')
                             }
                         },
@@ -103,7 +106,7 @@ export default class BookShelf extends Component{
     }
 
     handleAdd(){
-        this.refs.addPanel.setOpen()
+        this.addPanel.setOpen()
     }
 }
 
@@ -148,3 +151,19 @@ const styles = StyleSheet.create({
         top: pTd(42)
     }
 })
+
+const mapStateToProps = state => {
+    return {
+        booksList: state.booksList
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        addBooksList: booksList => {
+            dispatch(addBooksList(booksList))
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookShelf)

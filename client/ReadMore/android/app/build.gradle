@@ -147,6 +147,8 @@ android {
 }
 
 dependencies {
+    implementation project(':@react-native-community_async-storage')
+    implementation project(':react-native-svg')
     implementation project(':react-native-fs')
     implementation project(':react-native-pdf')
     implementation project(':rn-fetch-blob')

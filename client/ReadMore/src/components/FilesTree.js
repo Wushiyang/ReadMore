@@ -1,326 +1,356 @@
 import React,{ Component } from 'react'
-import {View, Text, StyleSheet, Image, ScrollView, TouchableWithoutFeedback, TouchableNativeFeedback, TouchableOpacity, SectionList} from 'react-native'
-import { pTd, fitIndex } from '../assets/js/utils';
-import RNFS, { ExternalStorageDirectoryPath }from 'react-native-fs'
+import {View, Text, StyleSheet, ScrollView, TouchableWithoutFeedback, TouchableOpacity, SectionList, findNodeHandle} from 'react-native'
+import { pTd } from '../assets/js/utils';
+// import { ExternalStorageDirectoryPath }from 'react-native-fs'
 import IndexPanel from '../components/IndexPanel'
-
-function FileItem(props){
-    let Info, Icon
-    if (props.type === 'dir') {
-        Info = (
-            // <Text style={{fontSize: pTd(27), color: '#a39491'}}>{props.size} MB</Text>
-            <Text style={{fontSize: pTd(0)}}></Text>
-        )
-        Icon = (
-            <Image source={require('../assets/icon-file.png')} style={{height: pTd(57), width: pTd(57)}}/>
-        )
-    } else if (props.type === 'txt') {
-        Info = (
-            <View style={{flexDirection: 'row'}}>
-                <View style={{width: pTd(62), height: pTd(30), borderRadius: pTd(5), backgroundColor: '#7ca4d8', justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={{fontSize: pTd(16), color: '#fff'}}>TXT</Text>
-                </View>
-                <Text style={{fontSize: pTd(20), color: '#a49997'}}>{props.size} MB</Text>
-            </View>
-        )
-        Icon = (
-            <Image source={require('../assets/icon-file.png')} style={{height: pTd(57), width: pTd(57)}}/>
-        )
-    } else if (props.type === 'pdf'){
-        Info = (
-            <View style={{flexDirection: 'row'}}>
-                <View style={{width: pTd(62), height: pTd(30), borderRadius: pTd(5), backgroundColor: '#e5814f', justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={{fontSize: pTd(16), color: '#fff'}}>TXT</Text>
-                </View>
-                <Text style={{fontSize: pTd(20), color: '#a49997'}}>{props.size} MB</Text>
-            </View>
-        )
-        Icon = (
-            <Image source={require('../assets/icon-file.png')} style={{height: pTd(57), width: pTd(57)}}/>
-        )
-    } else {
-        return (
-            <View>
-                <Text>缺少type</Text>
-            </View>
-        )
-    }
-    return (
-        <TouchableNativeFeedback
-            onPress={props.fn}>
-            <View style={styles.fileItem}>
-                <View>
-                    <Text style={{marginBottom: pTd(28), fontSize: pTd(30)}}>{props.name}</Text>
-                    {Info}
-                </View>
-                {Icon}
-            </View>
-        </TouchableNativeFeedback>
-    )
-}
+import {BoxShadow} from 'react-native-shadow'
+import FileItem from './FileItem'
 
 export default class FilesTree extends Component{
     constructor(){
         super()
+        this.scrollview = null
+        this.filespanel = null
+        this.sectionlist = null
         this.selectPanel = this.selectPanel.bind(this)
         this.deleteItem = this.deleteItem.bind(this)
         this.selectAll = this.selectAll.bind(this)
-    }
-
-    state = {
-        indexes: ['文件夹', '#', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
-        index: 0,
-        selectNum: 0,
-        filesState: []
-    }
-
-    componentWillMount(){
-        this.setFilePath(ExternalStorageDirectoryPath)
+        this.onScroll = this.onScroll.bind(this)
+        this.onSectionListLayout = this.onSectionListLayout.bind(this)
     }
 
     render(){
         let that = this
-        const indexes = this.state.indexes.map((val, index)=>({
-            name: val,
-            active: index < 10 ? true : false,
-            fn: function(){
-                that.selectIndex(index)
+        const {props} = this
+        const {filesState} = props
+        const indexes = props.indexes.map((val, index)=>{
+            let active = false
+            for(let i=0; i < filesState.length; i++){
+                if (filesState[i].title === val) {
+                    active = true
+                    break 
+                }
             }
-        }))
+            return {
+                name: val,
+                active: active,
+                fn: function(){
+                    that.selectIndex(val, index)
+                }
+            }
+        })
+        let footerRight = (
+            <View style={styles.footer_right}>
+                <View style={{width: pTd(140), height: pTd(100), justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{fontSize: pTd(30), color: '#bcb0b0'}}>删除</Text>
+                </View>
+                <View style={{height: pTd(100), width: pTd(208), backgroundColor: '#e7afb0', justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{fontSize: pTd(30), color: '#fff'}}>加入书架</Text>
+                </View>
+            </View>
+        )
+        const shadowOpt = {
+            height: pTd(100),
+            width: pTd(750),
+			color:"#eee",
+            border: pTd(10),
+            opacity: 0.8,
+			x:0,
+            y:0
+        }
+        if ( props.selectNum > 0 ) {
+            footerRight = (
+                <View style={styles.footer_right}>
+                    <TouchableOpacity
+                        onPress={this.deleteItem}>
+                        <View style={{width: pTd(140), height: pTd(100), justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={{fontSize: pTd(30)}}>删除</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => props.addToShelf()}>
+                        <View style={{height: pTd(100), width: pTd(208), backgroundColor: '#dd5049', justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={{fontSize: pTd(30), color: '#fff'}}>加入书架</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>                
+            )
+        }
+
+        let rows = []
+        props.filesState.forEach(val => {
+
+            rows.push()
+        })
         return (
             <View style={styles.container}>
-                <ScrollView style={styles.scroll}>
+                <ScrollView 
+                    style={styles.scroll}
+                    stickyHeaderIndices={[0]}
+                    ref={(scrollview) => {that.scrollview = scrollview}}
+                    onScroll={that.onScroll}
+                    scrollEventThrottle={0}
+                    alwaysBounceVertical={true}>
                     <TouchableWithoutFeedback 
                         onPress={this.selectPanel}>
-                        <View style={styles.header}>
-                            <Text style={{fontSize: pTd(28), color: '#a49997'}}>{this.state.indexes[this.state.index]}</Text>
+                        <View 
+                            style={[styles.header, {height: props.scrollItemHeaderHeight}]}>
+                            <Text style={{fontSize: pTd(28), color: '#a49997'}}>{props.indexes[props.index]}</Text>
                         </View>
                     </TouchableWithoutFeedback>
-                    <SectionList
-                            sections={this.state.filesState}
-                            style={{width: '100%', paddingLeft: pTd(45), paddingRight: pTd(45), backgroundColor: '#fff'}}
+                    <View
+                        ref={(sectionlist) => {that.sectionlist = sectionlist}}>
+                        <SectionList
+                            sections={props.filesState}
+                            style={{width: '100%', backgroundColor: '#fff', paddingLeft: pTd(45), paddingRight: pTd(45)}}
                             keyExtractor={(item, index) => (index + '')}
+                            renderSectionHeader={({section: {title}}) => (
+                                // <TouchableWithoutFeedback 
+                                //     onPress={this.selectPanel}>
+                                //     <View 
+                                //         style={[styles.fileHeader,{height: props.scrollItemHeaderHeight, borderTopWidth: props.scrollItemBorder}]}
+                                //         ref={(sectionHeader) => {that[title] = sectionHeader}}>
+                                //         <Text style={{fontSize: pTd(28), color: '#a49997'}}>{title}</Text>
+                                //     </View>
+                                // </TouchableWithoutFeedback>
+                                <View 
+                                    style={[styles.fileHeader,{height: props.scrollItemHeaderHeight, borderTopWidth: props.scrollItemBorder}]}
+                                    ref={(sectionHeader) => {that[title] = sectionHeader}}>
+                                    <Text style={{fontSize: pTd(28), color: '#a49997'}}>{title}</Text>
+                                </View>
+                            )}
                             renderItem={({item}) => (
-                                <FileItem type={item.type} size={item.size} name={item.name} fn={()=>that.setFilePath(item.path)}/>
+                                <FileItem 
+                                    type={item.type} 
+                                    size={item.size} 
+                                    name={item.name} 
+                                    path={item.path} 
+                                    fn={()=>{if (item.type==='dir') {props.setFilePath(item.path)}}}
+                                    checkfn={(checked)=>that.selectItem(checked, item)} 
+                                    checked={item.checked} 
+                                    hasAddShelft={item.hasAddShelft}
+                                    scrollItemHeight={props.scrollItemHeight}
+                                    scrollItemBorder={props.scrollItemBorder}/>
                             )}/>
+                    </View>
                 </ScrollView>
-                <View style={styles.footer}>
-                    <View style={styles.footer_left}>
-                        <View style={{flexDirection: 'row'}}>
-                            <Text style={{marginLeft: pTd(43), fontSize: pTd(28)}}>已选</Text>
-                            <Text style={{marginLeft: pTd(20), marginRight: pTd(20), fontSize: pTd(28), color: '#c45c5b'}}>{this.state.selectNum}</Text>
-                            <Text style={{fontSize: pTd(28)}}>项</Text>
+                <BoxShadow setting={shadowOpt}>
+                    <View style={styles.footer}>
+                        <View style={styles.footer_left}>
+                            <View style={{flexDirection: 'row'}}>
+                                <Text style={{marginLeft: pTd(43), fontSize: pTd(28)}}>已选</Text>
+                                <Text style={{marginLeft: pTd(20), marginRight: pTd(20), fontSize: pTd(28), color: '#c45c5b'}}>{props.selectNum}</Text>
+                                <Text style={{fontSize: pTd(28)}}>项</Text>
+                            </View>
+                            <TouchableOpacity
+                                onPress={this.selectAll}>
+                                <View style={{width: pTd(140), flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                                    <Text style={{fontSize: pTd(30)}}>全选</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
-                        <TouchableOpacity
-                            onPress={this.deleteItem}>
-                            <View style={{width: pTd(140), flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{fontSize: pTd(30)}}>全选</Text>
-                            </View>
-                        </TouchableOpacity>
+                        {footerRight}
                     </View>
-                    <View style={styles.footer_right}>
-                        <TouchableOpacity
-                            onPress={this.deleteItem}>
-                            <View style={{width: pTd(140), flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{fontSize: pTd(30)}}>删除</Text>
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={this.selectAll}>
-                            <View style={{flex: 1, width: pTd(208), backgroundColor: '#e7afb0', justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{fontSize: pTd(30), color: '#fff'}}>加入书架</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                </BoxShadow>
                 <IndexPanel
-                    ref='filespanel'
+                    ref={(filespanel) => {this.filespanel = filespanel}}
                     data={indexes}/>
             </View>
         )
     }
 
+    // 索引面板开启
     selectPanel(){
-        this.refs.filespanel.setOpen()
+        this.filespanel.setOpen()
     }
 
+    // 索引面板选择索引
+    selectIndex(capital, index){
+        this.filespanel.setClose()
+        // for(let i=0; i< filesState.length; i++){
+        //     if(filesState[i].title === capital){
+        //         this.scrollview.scrollTo({
+        //             x: 0,
+        //             y: filesState[i].scroll[0]
+        //         })
+        //         break
+        //     }
+        // }
+        // const {scrollTop, sectionlistOffsetTop} = this.props
+        // that.stickyheader.measure((fx, fy, width, height, px, py) => {
+        //     console.log(fx, fy, width, height, px, py)
+        //     that.props.setStateData({
+        //         sectionlistOffsetTop: py + that.props.scrollItemHeaderHeight
+        //     })
+        // })
+        // this[capital].measure((fx, fy, width, height, px, py) => {
+        //     console.log(fx, fy, width, height, px, py)
+        //     this.scrollview.scrollTo({
+        //         x: 0,
+        //         y: scrollTop + py - sectionlistOffsetTop
+        //     })
+        // })
+
+        this[capital].measureLayout(findNodeHandle(this.sectionlist), (x, y, width, height) => {
+            this.scrollview.scrollTo({
+                x: 0,
+                y: y
+            })
+        })
+    }
+
+    //初始化滚动
+    initScroll(){
+        this.onScroll({
+            nativeEvent: {
+                contentOffset: {
+                    y: 0
+                }
+            }
+        })
+    }
+
+    // 滚动界面滚动
+    onScroll( {nativeEvent: {contentOffset: {y}} } ){
+        console.log(`scrollY: ${y}`)
+        this.props.setStateData({
+            scrollTop: y
+        })
+        const {filesState, indexes, setStateData} = this.props
+        let capital, index
+        for(let i=0;i<filesState.length; i++){
+            const file = filesState[i]
+            if (file.scroll[0] <= y && file.scroll[1] > y) {
+                capital = file.title
+                break
+            }
+        }
+        index = indexes.findIndex(index => (capital === index))
+        setStateData({
+            index: index
+        })
+    }    
+
+    // 删除选择文件项
     deleteItem(){
         alert('delete item')
     }
 
+    // 全选文件项
     selectAll(){
-        alert('select all')
-    }
-
-    selectIndex(index){
-        this.refs.filespanel.setClose()
-        this.setState({
-            index: index
-        })
-    }
-
-    setFilePath(path){
-        let that = this
-        this.props.setPath(path)
-        const indexes = this.state.indexes
-        let fileMap = new Map()
-        RNFS.readDir(path).then(result => {
-            try {
-                result.forEach(val => {
-                    const capital = fitIndex(val.name)
-                    for(let i = 0; i < indexes.length; i++) {
-                        //文件夹处理
-                        if (val.isDirectory()) {
-                            let data = {
-                                path: val.path,
-                                name: val.name,
-                                type: 'dir',
-                                size: val.size/(1024*1024) 
-                            }
-                            if (fileMap.has('文件夹')) {
-                                data = [
-                                    ...fileMap.get('文件夹')
-                                ]
-                                data.push(
-                                    {
-                                        title: '文件夹',
-                                        data: data
-                                    }
-                                )
-                                fileMap.set('文件夹', data)
-                            } else {
-                                fileMap.set('文件夹', [
-                                    {
-                                        title: '文件夹',
-                                        data: data
-                                    }
-                                ])
-                            }
-                            break
-                        //文件处理
-                        } else {
-                            if (capital === indexes[i]) {
-                                let data
-                                if (/\.txt$/.test(name)) {
-                                    data = {
-                                        path: val.path,
-                                        name: name,
-                                        type: 'txt',
-                                        size: val.size/(1024*1024)
-                                    }
-                                } else if (/\.pdf$/.test(name)) {
-                                    data = {
-                                        path: val.path,                                
-                                        name: name,                            
-                                        type: 'pdf',
-                                        size: val.size/(1024*1024)
-                                    }
-                                }
-                                if (fileMap.has(capital)) {
-                                    data = [
-                                        ...fileMap.get(capital)
-                                    ]
-                                    data.push(
-                                        {
-                                            title: capital,
-                                            data: data
-                                        }
-                                    )
-                                    fileMap.set(capital, data)
-                                } else {
-                                    fileMap.set(capital, [
-                                        {
-                                            title: capital,
-                                            data: data
-                                        }
-                                    ])
-                                }
-                                break
-                            }
-                        }
-                    }
-                    // if (val.isDirectory()) {
-                    //     filesState.push({
-                    //         path: val.path,
-                    //         name: val.name,
-                    //         type: 'dir',
-                    //         size: val.size/(1024*1024)
-                    //     })
-                    // }
-                    // if (val.isFile()) {
-                    //     const name = val.name
-                    //     if (/\.txt$/.test(name)) {
-                    //         filesState.push({
-                    //             path: val.path,                                
-                    //             name: name,                            
-                    //             type: 'txt',
-                    //             size: val.size/(1024*1024)
-                    //         })
-                    //     } else if (/\.pdf$/.test(name)) {
-                    //         filesState.push({
-                    //             path: val.path,                                
-                    //             name: name,                            
-                    //             type: 'pdf',
-                    //             size: val.size/(1024*1024)
-                    //         })
-                    //     }
-                    // }
-                })
-            } catch (e) {
-                console.error(e)
-            }
-
-            that.setState({
-                filesState: [...fileMap.values()]
+        let {fileList, filesState, setStateData} = this.props
+        let count = 0
+        filesState.forEach(item => {
+            item.data.forEach(val => {
+                if (/^(pdf|txt)$/.test(val.type)) {
+                    val.checked = true
+                    fileList.push({
+                        img: val.img,
+                        name: val.name,
+                        ext: val.type,
+                        path: val.path
+                    })
+                    count++
+                }
             })
-        }).catch(error => {
-            console.log(error)
         })
+        setStateData({
+            filesState: filesState,
+            fileList: fileList,
+            selectNum: count
+        })
+    }
+
+    // 单选文件项
+    selectItem(ck, it){
+        let checked = !ck
+        let {fileList, filesState, setStateData, selectNum} = this.props
+        filesState.forEach(item => {
+            item.data.forEach(val => {
+                if (it.name === val.name) {
+                    val.checked = checked
+                }
+            })
+        })
+        if (checked) {
+            fileList.push({
+                img: it.img,
+                name: it.name,
+                ext: it.type,
+                path: it.path  
+            })
+            setStateData({
+                fileList: fileList,
+                selectNum: ++selectNum,
+                filesState: filesState
+            })  
+        } else {
+            const find = fileList.findIndex(currentValue => (currentValue.name === it.name))
+            fileList.slice(find, 1)
+            setStateData({
+                fileList: fileList,
+                selectNum: --selectNum,
+                filesState: filesState
+            })
+        }
+    }
+
+    onSectionListLayout({nativeEvent: {layout: {x, y, width, height}}}){
+        console.log(x, y, width, height)
     }
 }
 
 const styles = StyleSheet.create({
     container: {
         position: 'relative',
+        width: '100%',
         flex: 1
     },
     scroll: {
         flex: 1,
         width: '100%',
-        marginBottom: pTd(100) 
+        // position: 'relative'
     },
     header: {
         paddingLeft: pTd(40),
         paddingRight: pTd(40),
-        backgroundColor: '#edded9',
-        height: pTd(70),
-        justifyContent: 'center',
+        backgroundColor: '#eee',
+        justifyContent: 'center'
     },
     footer: {
-        position: 'absolute',
         height:　pTd(100),
-        width: '100%',
+        width: pTd(750),
         backgroundColor: '#fff',
-        left: 0,
-        bottom: 0,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
+        flexDirection: 'row'
     },
     footer_left: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: pTd(375),
+        height:　pTd(100),        
+        justifyContent: 'flex-start'           
     },
     footer_right: {
         flexDirection: 'row',
-        alignItems: 'center'        
+        alignItems: 'center',
+        width: pTd(375),
+        height:　pTd(100),        
+        justifyContent: 'flex-end'
     },
-    fileItem: {
-        height: pTd(136),
-        width: '100%',
-        borderTopWidth: 1,
-        borderTopColor: '#d3c4bf',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
+    fileHeader: {
+        paddingLeft: pTd(40),
+        paddingRight: pTd(40),
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        borderTopColor: '#d3c4bf',        
     }
+    // fileItem: {
+    //     height: scrollItemHeight,
+    //     width: '100%',
+    //     borderTopWidth: scrollItemBorder,
+    //     borderTopColor: '#d3c4bf',
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-between',
+    //     alignItems: 'center'
+    // }
 })

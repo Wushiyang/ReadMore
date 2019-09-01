@@ -3,6 +3,8 @@ package com.readmore;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.horcrux.svg.SvgPackage;
 import com.rnfs.RNFSPackage;
 import org.wonday.pdf.RCTPdfView;
 import com.RNFetchBlob.RNFetchBlobPackage;
@@ -27,6 +29,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new AsyncStoragePackage(),
+            new SvgPackage(),
             new RNFSPackage(),
         new RCTPdfView(),
         new RNFetchBlobPackage(),

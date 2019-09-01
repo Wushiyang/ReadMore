@@ -1,9 +1,19 @@
-import { bookList } from '../mocker/data'
+import { bookList } from '../mocker/data.json'
+import DeviceStorage from '../components/DeviceStorage'
 
-class BookServer{
-    static Instance = new BookServer()
-    getBooksList(){
-        return bookList
+export default class BookServer{
+    static getBooksList(){
+        return DeviceStorage.get('bookList').then(bookList => {
+            if (bookList === '' || bookList == undefined) {
+                bookList = []
+                DeviceStorage.save('bookList', bookList)
+                return bookList
+            }
+            return bookList
+        })
+    }
+
+    static updateBooksList(value){
+        return DeviceStorage.update('bookList', value)
     }
 }
-export default BookServer.Instance

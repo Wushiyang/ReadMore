@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Image} from 'react-native';
+import {StyleSheet, Image} from 'react-native';
 import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation'
 import BookShelf from './src/pages/BookShelf'
 import BookShop from './src/pages/BookShop'
@@ -16,6 +16,8 @@ import { pTd } from './src/assets/js/utils'
 import ReadPage from './src/pages/ReadPage'
 import NavigationService from './NavigationService'
 import ImportPage from './src/pages/ImportPage'
+import {Provider} from 'react-redux'
+import store from './src/redux/index'
 
 const TabNavigator = createBottomTabNavigator(
 	{
@@ -128,10 +130,12 @@ const AppContainer = createAppContainer(stackNavigator)
 export default  class App extends Component{
 	render(){
 		return (
-			<AppContainer 
-				ref={navigatorRef => {
-					NavigationService.setTopLevelNavigator(navigatorRef)
-				}}/>
+			<Provider store={store}>
+				<AppContainer 
+					ref={navigatorRef => {
+						NavigationService.setTopLevelNavigator(navigatorRef)
+					}}/>
+			</Provider>
 		)
 	}
 }

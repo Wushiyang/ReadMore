@@ -3,13 +3,20 @@ import {View, Text, StyleSheet, TouchableWithoutFeedback, Modal, TouchableOpacit
 import {pTd} from '../assets/js/utils'
 
 function Box(props){
+    if (props.active) {
+        return (
+            <TouchableOpacity
+                onPress={props.fn}>
+                <View style={{width: pTd(150), height: pTd(128), backgroundColor: '#e24f47', justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{fontSize: pTd(35), color: '#fff'}}>{props.name}</Text>
+                </View>
+            </TouchableOpacity>
+        )
+    }
     return (
-        <TouchableOpacity
-            onPress={props.fn}>
-            <View style={{width: pTd(150), height: pTd(128), backgroundColor: props.active?'#e24f47':'#8f7f80', justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={{fontSize: pTd(35), color: props.active?'#fff':'#ada1a1'}}>{props.name}</Text>
-            </View>
-        </TouchableOpacity>
+        <View style={{width: pTd(150), height: pTd(128), backgroundColor: '#8f7f80', justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={{fontSize: pTd(35), color: '#ada1a1'}}>{props.name}</Text>
+        </View>
     )
 }
 

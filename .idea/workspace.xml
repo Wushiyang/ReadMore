@@ -2,8 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75965563-8ea6-464a-8d91-67849b115560" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/components/DropDown.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/components/DropDown.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/android/app/src/main/java/com/readmore/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/android/app/src/main/java/com/readmore/MainApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/android/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/ios/ReadMore.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/ios/ReadMore.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/assets/js/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/assets/js/utils.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/components/FilesTree.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/components/FilesTree.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/components/IndexPanel.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/components/IndexPanel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/mocker/data.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/src/pages/BookShelf.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/pages/BookShelf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/pages/ImportPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/pages/ImportPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/servers/BookServer.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/servers/BookServer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -11,10 +25,13 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileEditorManager">
+    <leaf />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -25,8 +42,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -34,10 +49,57 @@
               <item name="ReadMore" type="b2602c69:ProjectViewProjectNode" />
               <item name="ReadMore" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="ReadMore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ReadMore" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ReadMore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ReadMore" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="ReadMore" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ReadMore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ReadMore" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="ReadMore" type="462c0819:PsiDirectoryNode" />
+              <item name="android" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ReadMore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ReadMore" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="ReadMore" type="462c0819:PsiDirectoryNode" />
+              <item name="android" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ReadMore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ReadMore" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="ReadMore" type="462c0819:PsiDirectoryNode" />
+              <item name="android" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ReadMore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ReadMore" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="ReadMore" type="462c0819:PsiDirectoryNode" />
+              <item name="android" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="debug" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -71,23 +133,59 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="1" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" visible="true" weight="0.22391991" />
-      <window_info id="Structure" side_tool="true" />
-      <window_info id="Image Layers" />
-      <window_info id="Designer" />
-      <window_info id="Resources Explorer" />
-      <window_info id="Capture Tool" />
-      <window_info id="Favorites" side_tool="true" />
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="TODO" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="right" id="Capture Analysis" />
-      <window_info anchor="right" id="Theme Preview" />
-      <window_info anchor="right" id="Palette&#9;" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.22391991" />
+      <window_info id="Structure" order="2" side_tool="true" />
+      <window_info id="Image Layers" order="3" />
+      <window_info id="Designer" order="4" />
+      <window_info id="Resources Explorer" order="5" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info id="Favorites" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="0" />
+      <window_info anchor="bottom" id="TODO" order="1" />
+      <window_info anchor="bottom" id="Terminal" order="2" />
+      <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" />
+      <window_info anchor="right" id="Capture Analysis" order="0" />
+      <window_info anchor="right" id="Theme Preview" order="1" />
+      <window_info anchor="right" id="Palette&#9;" order="2" />
     </layout>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/3e3ce35b73714fcf4a51d56e04f422f.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/8b39a9a10086469fb72800f342bf33e.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/81e96047368e906800dee9ac4443989.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/ReadMore/android/gradlew.bat">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-228">
+          <caret line="12" column="25" lean-forward="true" selection-start-line="12" selection-start-column="25" selection-end-line="12" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/ReadMore/android/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/ReadMore/android/app/src/main/java/com/readmore/MainApplication.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/ReadMore/android/app/src/main/java/com/readmore/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/ReadMore/android/app/build/outputs/apk/debug/app-debug.apk">
+      <provider selected="true" editor-type-id="apk-viewer" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/ReadMore/android/app/build/outputs/apk/debug/output.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/ReadMore/android/app/build/intermediates/apk_list/debug/mainApkListPersistenceDebug/apk-list.gson">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
   </component>
 </project>
