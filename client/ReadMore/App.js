@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React, {Component} from 'react';
+import React from 'react';
 import {StyleSheet, Image} from 'react-native';
 import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation'
 import BookShelf from './src/pages/BookShelf'
@@ -127,7 +127,11 @@ const styles = StyleSheet.create({
 
 const AppContainer = createAppContainer(stackNavigator)
 
-export default  class App extends Component{
+type Props = {
+
+}
+
+export default  class App extends React.Component<Props>{
 	render(){
 		return (
 			<Provider store={store}>

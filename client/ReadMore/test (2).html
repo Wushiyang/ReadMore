@@ -1,0 +1,91 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <span id='text'></span>
+</body>
+<script>
+var a = 
+`
+
+------------
+
+第1章 001又双叒叕重生
+
+    一夜暴风骤雨，本来开的正艳的桃花散落了满地。树枝间依稀还能看到几个花骨朵儿，也不晓得在这花期的末尾，能翻出几个幺蛾子。
+
+    此刻外面的天气仍旧阴阴沉沉……与这府里的气氛倒是相得益彰。
+
+    今儿个热闹，家里的孩子们，不论男女，无论嫡庶，都要去主屋听母亲训话。
+
+    颜落自然也不例外。
+
+    作为大学士府年纪最小的姑娘，也是唯一庶出的姑娘，颜落虽说没受到什么苛待，到底身份低了些，也没受过什么好的待遇就是了。
+
+    人说，龙生龙，凤生凤，老鼠的儿子会打洞……
+
+    颜落的三个嫡出的哥哥大概是随了她这嫡母，都不成大器。
+
+    今日的大戏唱主角的是大哥。
+
+    剧情跌宕起伏，有泪点也有爽点。
+
+    只是同样的情节她都看三遍了！若是此刻颜落还能看的津津有味儿，除非她是个傻子！
+
+    于是，在大哥哥说给屋子里的通房丫鬟肚子搞大了，母亲要赏给那丫鬟一碗落胎药的时候……
+
+    颜落低着头，一本正经的蹙眉在想着自己的事。
+
+    如此，倒也叫她装出了一副悲春伤秋，感同身受的悲凉。
+
+    当然，悲凉也是真的悲凉。
+
+    颜落觉得自己真真是被老天爷关照的有些过头。
+
+    穿越到这个地方，连续三次不同的造型死了之后，颜落坚定的认为自己没有机会再回来了。
+
+    毕竟俗话说事不过三……
+
+    可是当她以为自己死透了……结果一睁眼，仍旧回到了一模一样的夜晚，清白被夺之时……
+
+    跟前三次一样，那个人哪儿都没变，和外面摧残一树桃花的暴风雨一样无情。
+
+    不知道是不是错觉，这次竟然感觉比前几次要更加凶残。
+
+    暂且用“凶残”把，因为颜落真的找不到合适的形容`
+
+var number = 0
+
+/**
+ * 假设列数 19
+ * \n
+ * \t 4
+ * 
+ */
+
+var cols = 19
+var rows = 32
+// var c = a.replace(/\n(.*)/mg,function(tg, tg1, pos){
+//     // number 
+//     number = 1 + Math.ceil(tg1.length/cols)
+//     if(number == rows){
+//         number = 0
+//     }   
+
+
+//     console.log(arguments)
+//     debugger
+// })
+var reg = new RegExp(`/(^\n.{0,${cols}}|[^\n\t]{0,${cols}})/`, 'mg')
+var c = a.replace(reg, function(tg, tg1, pos){
+    console.log(arguments)
+    debugger
+})
+
+console.log(c)
+</script>
+</html>

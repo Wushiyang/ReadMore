@@ -1,12 +1,18 @@
+/**
+ * @flow
+ */
+import type {BooksItem, Action} from './type'
 import { combineReducers } from 'redux'
 import {ADD_BOOKSLIST} from './actions'
 
-function addBooksList(state = [], action){
+type Reducer<S, A> = (state: S, action: A) => S
+
+const addBooksList: Reducer<BooksItem[], Action> = (state = [], action) => {
     switch(action.type){
         case ADD_BOOKSLIST:
             return [
                 ...state,
-                ...action.booksList
+                ...action.list
             ]
         default: 
             return state

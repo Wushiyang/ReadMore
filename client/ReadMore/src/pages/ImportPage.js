@@ -1,4 +1,7 @@
-import React,{ Component } from 'react'
+/**
+ * @flow
+ */
+import React from 'react'
 import {View, Text, StyleSheet, Image, TouchableWithoutFeedback, ActivityIndicator} from 'react-native'
 import RNFS, {ExternalStorageDirectoryPath} from 'react-native-fs'
 import NavigationServer from '../../NavigationService'
@@ -7,6 +10,7 @@ import BookServer from '../servers/BookServer'
 import { GoBack } from '../components/common'
 import {connect} from 'react-redux'
 import {addBooksList} from '../redux/actions'
+import type {BooksItem, Action} from '../redux/type'
 
 //滚动项高度
 const scrollItemHeaderHeight = pTd(70)
@@ -17,9 +21,40 @@ const scrollItemBorder = 1
 
 import FilesTree from '../components/FilesTree'
 
+type FileItem = {
+    path: string,
+    name: string,
+    type: 'dir' | 'txt' | 'pdf',
+    size: string,
+    checked?: boolean,
+    hasAddShelft?: boolean
+}
+
+type FilesStateItem = {
+    title: string,
+    data: FileItem[],
+    scroll: [number, number]
+}
+
+type Props = {
+    booksList: BooksItem[],
+    addBooksList: (BooksItem[]) => Action
+}
+
+type State = {
+    path: string,
+    lastPath: ?string,
+    indexes: string[],
+    index: number,
+    filesState: FilesStateItem[],
+    fileList: BooksItem[],
+    selectNum: number,
+    scrollTop: number
+}
 
 
-class ImportPage extends Component{
+
+class ImportPage extends React.Component<Props, State>{
     static navigationOptions = {
         title: '手机目录',
         headerLeft: <GoBack routeName='bookshelf'/>
@@ -37,10 +72,6 @@ class ImportPage extends Component{
             selectNum: 0,
             scrollTop: 0
         }
-        this.goBack = this.goBack.bind(this)
-        this.setStateData = this.setStateData.bind(this)
-        this.setFilePath = this.setFilePath.bind(this)
-        this.addToShelf = this.addToShelf.bind(this)
     }
 
     async componentDidMount(){
@@ -57,7 +88,7 @@ class ImportPage extends Component{
                         <Text style={{fontSize: pTd(28), color: '#a49997'}}>{state.path}</Text>
                     </View>
                     <TouchableWithoutFeedback
-                        onPress={this.goBack}>
+                        onPress={this.goBack.bind(this)}>
                         <View style={styles.right}>
                             <Image source={require('../assets/icon-goup.png')} style={styles.goup}/>
                             <Text style={{fontSize: pTd(28), color: '#685d5b'}}>上一级</Text>
@@ -71,9 +102,9 @@ class ImportPage extends Component{
                     filesState={state.filesState}
                     fileList={state.fileList}
                     scrollTop={state.scrollTop}
-                    setStateData={this.setStateData}
-                    setFilePath={(path) => this.setFilePath(path)}
-                    addToShelf={this.addToShelf}
+                    setStateData={this.setStateData.bind(this)}
+                    setFilePath={this.setFilePath.bind(this)}
+                    addToShelf={this.addToShelf.bind(this)}
                     scrollItemHeaderHeight={scrollItemHeaderHeight}
                     scrollItemHeight={scrollItemHeight}
                     scrollItemBorder={scrollItemBorder}/>
@@ -82,21 +113,21 @@ class ImportPage extends Component{
     }
 
     goBack(){
-        const path = this.state.path.replace(/\/([^\/]+)$/, '')
+        let path = this.state.path
         if (path === ExternalStorageDirectoryPath || path === '/') {
             return NavigationServer.navigate('bookshelf')
         }
-        this.setFilePath(path)
+        this.setFilePath(path.replace(/\/([^\/]+)$/, ''))
     }
 
     // 处理路径页面
-    setFilePath(path){
+    setFilePath(path: string){
         let that = this
         const lastPath = this.state.path
-        let fileMap = new Map()
+        let fileMap = new Map<string, FilesStateItem>()
         let scrollTotal = 0
         let filesState
-        const {booksList} = this.props
+        const { booksList } = this.props
         RNFS.readDir(path).then(result => {
             const sortResult = result.sort((a, b) => {
                 //对获取文件信息排序，文件夹排最前面，文件排后面，文件夹和文件名字大写首字母ascii码排序
@@ -122,8 +153,9 @@ class ImportPage extends Component{
                         type: 'dir',
                         size: val.size
                     }
+
                     if (fileMap.has('文件夹')) {
-                        let {data, scroll} = fileMap.get('文件夹')
+                        let {data, scroll} = (fileMap.get('文件夹'): any)
                         fileMap.set('文件夹', {
                             title: '文件夹',
                             data: [...data, dir],
@@ -143,6 +175,7 @@ class ImportPage extends Component{
                 //文件处理
                 } else {
                     let file, hasAddShelft = false
+                    let item
                     for(item of booksList){
                         //根据路径判断是否同一文件
                         if (item.path===val.path){
@@ -150,6 +183,7 @@ class ImportPage extends Component{
                             break
                         }
                     }
+                    for(let i=0; i<booksList.length; i++ )
                     if (/\.txt$/.test(val.name)) {
                         file = {
                             path: val.path,
@@ -171,7 +205,7 @@ class ImportPage extends Component{
                     }
                     if (typeof file === 'object') {
                         if (fileMap.has(capital)) {
-                            let {data, scroll} = fileMap.get(capital)
+                            let {data, scroll} = (fileMap.get(capital): any)
                             fileMap.set(capital, {
                                 title: capital,
                                 data: [...data, file],
@@ -269,3 +303,7 @@ const mapDispatchToProps = dispatch => {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(ImportPage)
+
+function isNotUndefined(y): %checks {
+    return typeof y === "number";
+  }

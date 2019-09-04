@@ -3,6 +3,7 @@ package com.readmore;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rctbattery.BatteryManagerPackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.horcrux.svg.SvgPackage;
 import com.rnfs.RNFSPackage;
@@ -29,6 +30,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
         new MainReactPackage(),
+            new BatteryManagerPackage(),
             new AsyncStoragePackage(),
             new SvgPackage(),
             new RNFSPackage(),

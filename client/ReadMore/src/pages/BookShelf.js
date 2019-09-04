@@ -1,4 +1,7 @@
-import React, {Component} from 'react'
+/**
+ * @flow
+ */
+import React from 'react'
 import {View, Text, ScrollView, StyleSheet, Image, TouchableHighlight, PermissionsAndroid} from 'react-native'
 import {pTd} from '../assets/js/utils'
 import Book from '../components/Book'
@@ -7,6 +10,8 @@ import DropDown from '../components/DropDown'
 import NavigationServer from '../../NavigationService'
 import {connect} from 'react-redux'
 import {addBooksList} from '../redux/actions'
+
+import type {BooksItem, Action} from '../redux/type'
 
 async function requestFilePermission() {
     try {
@@ -32,12 +37,20 @@ async function requestFilePermission() {
 
 requestFilePermission()
 
-class BookShelf extends Component{
-    constructor(props){
+type Props = {
+    addBooksList: (BooksItem[]) => Action,
+    booksList: BooksItem[]
+}
+type State = {
+
+}
+class BookShelf extends React.Component<Props, State>{
+
+    addPanel: any
+
+    constructor(){
         super()
-        this.addPanel = null
-        this.handleSearch = this.handleSearch.bind(this)
-        this.handleAdd = this.handleAdd.bind(this)
+        // this.addPanel = null
     }
 
     async componentDidMount(){
@@ -56,13 +69,13 @@ class BookShelf extends Component{
                     <View style={styles.header_left}>
                         <TouchableHighlight 
                             style={[styles.icon_wrap, styles.src_r]}
-                            onPress={this.handleSearch}
+                            onPress={this.handleSearch.bind(this)}
                             underlayColor='#dececf'>
                             <Image source={require('../assets/icon-search.png')} style={styles.icon}/>
                         </TouchableHighlight>
                         <TouchableHighlight
                             style={styles.icon_wrap}
-                            onPress={this.handleAdd}
+                            onPress={this.handleAdd.bind(this)}
                             underlayColor='#dececf'>
                             <View>
                                 <Image source={require('../assets/icon-add.png')} style={styles.icon}/>

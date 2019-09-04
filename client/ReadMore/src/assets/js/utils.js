@@ -30,8 +30,29 @@ function beautySize(size){
     }
 }
 
+function addZero(number){
+    return number < 10? '0' + number : number
+}
+
+function getNowTime(){
+    const data = new Date()
+    return `${addZero(data.getHours())}:${addZero(data.getMinutes())}`
+}
+
+function countPageFontNumber(height, width, lineHeight, fontSize, txt){
+    // const cols = Math.floor(width / fontSize)
+    // const rows = Math.floor(height/lineHeight)
+    // let pointList = []
+    // txt.replace(/^\n/g,function(){
+    //     number 
+    //     return '\nT'
+    // })
+
+}
+
 export { pTd } from './fit'
 export { 
     fitIndex,
-    beautySize
+    beautySize,
+    getNowTime
 }

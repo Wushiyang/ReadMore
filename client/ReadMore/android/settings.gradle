@@ -1,4 +1,6 @@
 rootProject.name = 'ReadMore'
+include ':react-native-battery'
+project(':react-native-battery').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-battery/android')
 include ':@react-native-community_async-storage'
 project(':@react-native-community_async-storage').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/async-storage/android')
 include ':react-native-svg'

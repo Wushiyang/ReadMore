@@ -1,5 +1,5 @@
 {
-  "name": "ReadMore",
+  "name": "readmore",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -12,10 +12,13 @@
     "link_rnfs": "react-native link react-native-fs",
     "link_rnsvg": "react-native link react-native-svg",
     "link_rnas": "react-native link @react-native-community/async-storage",
-    "reset": "react-native start --reset-cache"
+    "link_rnb": "react-native link react-native-battery",
+    "reset": "react-native start --reset-cache",
+    "flow": "flow"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.6.1",
+    "flow-bin": "^0.106.3",
     "pinyin": "^2.9.0",
     "react": "16.8.3",
     "react-clusterize": "^0.2.2",

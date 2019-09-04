@@ -3,20 +3,21 @@
   <component name="ChangeListManager">
     <list default="true" id="75965563-8ea6-464a-8d91-67849b115560" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/.flowconfig" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/.flowconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/android/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/android/app/src/main/java/com/readmore/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/android/app/src/main/java/com/readmore/MainApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/android/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/ios/ReadMore.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/ios/ReadMore.xcodeproj/project.pbxproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/assets/js/fit.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/assets/js/fit.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/src/assets/js/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/assets/js/utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/components/FilesTree.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/components/FilesTree.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/components/IndexPanel.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/components/IndexPanel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/mocker/data.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/src/pages/BookShelf.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/pages/BookShelf.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/src/pages/ImportPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/pages/ImportPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/servers/BookServer.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/servers/BookServer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/pages/ReadPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/pages/ReadPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/redux/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/redux/actions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/redux/reducers.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/redux/reducers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/workspace.code-workspace" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -42,6 +43,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -98,8 +101,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
