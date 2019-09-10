@@ -2,22 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75965563-8ea6-464a-8d91-67849b115560" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/ReadMore.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ReadMore.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/.flowconfig" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/.flowconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/android/app/src/main/java/com/readmore/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/android/app/src/main/java/com/readmore/MainApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/android/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/ios/ReadMore.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/ios/ReadMore.xcodeproj/project.pbxproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/assets/js/fit.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/assets/js/fit.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/src/assets/js/utils.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/assets/js/utils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/pages/BookShelf.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/pages/BookShelf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/components/FileItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/components/FileItem.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/src/pages/ImportPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/pages/ImportPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/src/pages/ReadPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/pages/ReadPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/redux/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/redux/actions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/src/redux/reducers.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/src/redux/reducers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/ReadMore/workspace.code-workspace" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/client/ReadMore/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/client/ReadMore/yarn.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -32,7 +23,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -43,8 +34,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -101,11 +90,14 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="H:/ASSDK" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/client" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/client/ReadMore" />
     <property name="settings.editor.selected.configurable" value="configurable.group.editor" />
   </component>
   <component name="RunDashboard">
@@ -133,24 +125,38 @@
     </task>
     <servers />
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="1" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
     <layout>
-      <window_info id="Captures" order="0" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.22391991" />
+      <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.2238806" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
       <window_info id="Resources Explorer" order="5" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="0" />
-      <window_info anchor="bottom" id="TODO" order="1" />
+      <window_info id="Build Variants" order="8" side_tool="true" />
+      <window_info anchor="bottom" id="Find" />
+      <window_info anchor="bottom" id="Version Control" order="0" sideWeight="0.49946696" weight="0.32936078" />
+      <window_info active="true" anchor="bottom" id="TODO" order="1" sideWeight="0.49946696" visible="true" weight="0.1516793" />
       <window_info anchor="bottom" id="Terminal" order="2" />
-      <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" />
+      <window_info anchor="bottom" id="Event Log" order="3" sideWeight="0.50053304" side_tool="true" visible="true" weight="0.1516793" />
+      <window_info anchor="bottom" id="Logcat" order="4" />
+      <window_info anchor="bottom" id="Android Profiler" order="5" show_stripe_button="false" />
       <window_info anchor="right" id="Capture Analysis" order="0" />
       <window_info anchor="right" id="Theme Preview" order="1" />
       <window_info anchor="right" id="Palette&#9;" order="2" />
+      <window_info anchor="right" id="Device File Explorer" order="3" side_tool="true" />
     </layout>
   </component>
   <component name="editorHistoryManager">

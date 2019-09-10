@@ -183,7 +183,6 @@ class ImportPage extends React.Component<Props, State>{
                             break
                         }
                     }
-                    for(let i=0; i<booksList.length; i++ )
                     if (/\.txt$/.test(val.name)) {
                         file = {
                             path: val.path,

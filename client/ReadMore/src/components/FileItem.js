@@ -28,20 +28,21 @@ export default class FileItem extends Component{
                     <Text style={{fontSize: pTd(20), color: '#a49997'}}>{beautySize(props.size)}</Text>
                 </View>
             )
+
+            Icon = (
+                <CheckBox
+                    checkboxStyle={{width: pTd(35), height: pTd(35)}}
+                    label=''
+                    checked={props.checked}
+                    onChange={(checked) => props.checkfn(checked)}
+                />
+            )
             if (props.hasAddShelft) {
                 Icon = (
                     <Text>已加入书架</Text>
                 )
-            } else {
-                Icon = (
-                    <CheckBox
-                        checkboxStyle={{width: pTd(35), height: pTd(35)}}
-                        label=''
-                        checked={props.checked}
-                        onChange={(checked) => props.checkfn(checked)}
-                    />
-                )                
             }
+
         } else if (props.type === 'pdf'){
             Info = (
                 <View style={{flexDirection: 'row'}}>
@@ -51,20 +52,21 @@ export default class FileItem extends Component{
                     <Text style={{fontSize: pTd(20), color: '#a49997'}}>{beautySize(props.size)}</Text>
                 </View>
             )
+
+            Icon = (
+                <CheckBox
+                    checkboxStyle={{width: pTd(35), height: pTd(35)}}
+                    label=''
+                    checked={props.checked}
+                    onChange={(checked) => props.checkfn(checked)}
+                />
+            )                
             if (props.hasAddShelft) {
                 Icon = (
                     <Text>已加入书架</Text>
                 )
-            } else {
-                Icon = (
-                    <CheckBox
-                        checkboxStyle={{width: pTd(35), height: pTd(35)}}
-                        label=''
-                        checked={props.checked}
-                        onChange={(checked) => props.checkfn(checked)}
-                    />
-                )                
             }
+
         } else {
             return (
                 <View>
