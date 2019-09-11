@@ -6,7 +6,7 @@ import {View, StyleSheet, Text, Dimensions, ScrollView, StatusBar} from 'react-n
 import {pTd, getNowTime, countPageFontNumber} from '../assets/js/utils'
 import Pdf from 'react-native-pdf'
 import RNFS from 'react-native-fs'
-// import {Base64} from 'js-base64'
+import {Base64} from 'js-base64'
 
 const {height, width} = Dimensions.get('window')
 //页眉高度
@@ -24,7 +24,7 @@ const fontSize = Math.floor(pTd(35))
 //txt文字默认行高
 const lineHeight = Math.floor(fontSize * 1.2)
 //分段读取txt文件一次读取字节数
-const readLength = 2000
+const readLength = 1000
 //换页阈值
 const cpValue = Math.floor(width / 8)
 const changPoint = cpValue > 30 ? cpValue : 30
@@ -168,6 +168,8 @@ export default class ReadPage extends React.Component<Props, State>{
         )
     }
 
+    // 百分比计算规则：
+    //    ( 已读完的读取的字节 / 全文字节 + (读取长度 / 全文字节) * (分段点数组[分段点后点索引] / 分段点数组[分段点最后点索引]) ) * 100
     changePage(flag: string){
         const {readIndex, loadPointList, uri, fileLoadPosition, readTxt, size} = this.state
         let changeIndex, changeLoadPosition
@@ -180,7 +182,7 @@ export default class ReadPage extends React.Component<Props, State>{
                 }
                 this.readFile(uri, size, changeLoadPosition, true)
             } else {
-                const readPP = (changeLoadPosition / size) * (loadPointList[changeIndex] / loadPointList[changeIndex + 1]) * 100
+                const readPP = (fileLoadPosition / size +  (readLength / size) * (loadPointList[changeIndex + 1] / loadPointList[loadPointList.length - 1])) * 100
                 this.setState({
                     txt: readTxt.substring(loadPointList[changeIndex], loadPointList[changeIndex + 1]),
                     readIndex: changeIndex,
@@ -196,7 +198,7 @@ export default class ReadPage extends React.Component<Props, State>{
                 }
                 this.readFile(uri, size, changeLoadPosition, false)
             } else {
-                const readPP = ((changeLoadPosition) / size) * (loadPointList[changeIndex] / loadPointList[readIndex]) * 100
+                const readPP = (fileLoadPosition / size +  (readLength / size) * (loadPointList[readIndex] / loadPointList[loadPointList.length - 1])) * 100
                 this.setState({
                     txt: readTxt.substring(loadPointList[changeIndex], loadPointList[readIndex]),
                     readIndex: changeIndex,
@@ -211,10 +213,10 @@ export default class ReadPage extends React.Component<Props, State>{
         let that = this
         // RNFS.readFile(uri).then( result => {
         RNFS.read(uri, readLength, fileLoadPosition, 'base64').then( base64 => {
-            // let result = Base64.decode(base64)
+            let result = Base64.decode(base64)
             const loadPointList = countPageFontNumber(contentHeight, contentWidth, lineHeight, fontSize, result)
             if (isStart === true) {
-                const readPP = ((fileLoadPosition + readLength) / size) * (loadPointList[1] / loadPointList[loadPointList.length - 1]) * 100
+                const readPP = (fileLoadPosition / size +  (readLength / size) * (loadPointList[1] / loadPointList[loadPointList.length - 1])) * 100
                 that.setState({
                     readTxt: result,
                     txt: result.substring(0, loadPointList[1]),
@@ -224,7 +226,7 @@ export default class ReadPage extends React.Component<Props, State>{
                     readPP: readPP
                 })
             } else {
-                const readPP = ((fileLoadPosition + readLength) / size)
+                const readPP = (fileLoadPosition + readLength) / size * 100
                 that.setState({
                     readTxt: result,
                     txt: result.substring(loadPointList[loadPointList.length - 2], loadPointList[loadPointList.length - 1]),
