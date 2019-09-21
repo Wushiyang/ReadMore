@@ -1,22 +1,45 @@
+/**
+ * @flow
+ */
 import React,{ Component } from 'react'
 import {View, Text, StyleSheet, ScrollView, TouchableWithoutFeedback, TouchableOpacity, SectionList, findNodeHandle} from 'react-native'
-import { pTd } from '../assets/js/utils';
-// import { ExternalStorageDirectoryPath }from 'react-native-fs'
+import { pTd } from '../assets/js/utils'
 import IndexPanel from '../components/IndexPanel'
 import {BoxShadow} from 'react-native-shadow'
-import FileItem from './FileItem'
+import CFileItem from './FileItem'
+import type {FilesStateItem, FileItem} from '../pages/ImportPage'
+import type {BooksItem, Action} from '../redux/type'
 
-export default class FilesTree extends Component{
+type Props = {
+    filesState: FilesStateItem[],
+    indexes: string[],
+    selectNum: number,
+    scrollItemHeaderHeight: number,
+    index: number,
+    fileList: BooksItem[],
+    scrollTop: number,
+    setStateData: (Object)=>void,
+    setFilePath: (string)=>void,
+    addToShelf: ()=>void,
+    scrollItemHeight: number,
+    scrollItemBorder: number
+}
+type state = {
+
+}
+export default class FilesTree extends Component<Props, state>{
+
+    scrollview: any
+
+    filespanel: any
+
+    sectionlist: any
+
+    sectionitems: Object = {}
+
     constructor(){
         super()
-        this.scrollview = null
-        this.filespanel = null
-        this.sectionlist = null
-        this.selectPanel = this.selectPanel.bind(this)
-        this.deleteItem = this.deleteItem.bind(this)
-        this.selectAll = this.selectAll.bind(this)
-        this.onScroll = this.onScroll.bind(this)
-        this.onSectionListLayout = this.onSectionListLayout.bind(this)
+        // this.onSectionListLayout = this.onSectionListLayout.bind(this)
     }
 
     render(){
@@ -62,7 +85,7 @@ export default class FilesTree extends Component{
             footerRight = (
                 <View style={styles.footer_right}>
                     <TouchableOpacity
-                        onPress={this.deleteItem}>
+                        onPress={this.deleteItem.bind(this)}>
                         <View style={{width: pTd(140), height: pTd(100), justifyContent: 'center', alignItems: 'center'}}>
                             <Text style={{fontSize: pTd(30)}}>删除</Text>
                         </View>
@@ -82,28 +105,30 @@ export default class FilesTree extends Component{
 
             rows.push()
         })
+        const curentIndex = props.filesState[props.index]
         return (
             <View style={styles.container}>
                 <ScrollView 
                     style={styles.scroll}
                     stickyHeaderIndices={[0]}
-                    ref={(scrollview) => {that.scrollview = scrollview}}
-                    onScroll={that.onScroll}
-                    scrollEventThrottle={0}
+                    ref={(scrollview) => {this.scrollview = scrollview}}
+                    // onScroll={that.onScroll.bind(this)}
+                    // scrollEventThrottle={0}
                     alwaysBounceVertical={true}>
-                    <TouchableWithoutFeedback 
-                        onPress={this.selectPanel}>
+                    {/* <TouchableWithoutFeedback 
+                        onPress={this.selectPanel.bind(this)}>
                         <View 
                             style={[styles.header, {height: props.scrollItemHeaderHeight}]}>
-                            <Text style={{fontSize: pTd(28), color: '#a49997'}}>{props.indexes[props.index]}</Text>
+                            <Text style={{fontSize: pTd(28), color: '#a49997'}}>{curentIndex && curentIndex.title}</Text>
                         </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableWithoutFeedback> */}
                     <View
                         ref={(sectionlist) => {that.sectionlist = sectionlist}}>
                         <SectionList
                             sections={props.filesState}
                             style={{width: '100%', backgroundColor: '#fff', paddingLeft: pTd(45), paddingRight: pTd(45)}}
                             keyExtractor={(item, index) => (index + '')}
+                            initialNumToRender={500}
                             renderSectionHeader={({section: {title}}) => (
                                 // <TouchableWithoutFeedback 
                                 //     onPress={this.selectPanel}>
@@ -113,21 +138,24 @@ export default class FilesTree extends Component{
                                 //         <Text style={{fontSize: pTd(28), color: '#a49997'}}>{title}</Text>
                                 //     </View>
                                 // </TouchableWithoutFeedback>
-                                <View 
-                                    style={[styles.fileHeader,{height: props.scrollItemHeaderHeight, borderTopWidth: props.scrollItemBorder}]}
-                                    ref={(sectionHeader) => {that[title] = sectionHeader}}>
-                                    <Text style={{fontSize: pTd(28), color: '#a49997'}}>{title}</Text>
-                                </View>
+                                <TouchableWithoutFeedback 
+                                    onPress={this.selectPanel}>
+                                    <View
+                                        style={[styles.fileHeader,{height: props.scrollItemHeaderHeight, borderTopWidth: props.scrollItemBorder}]}
+                                        ref={(sectionHeader) => {this.sectionitems[title] = sectionHeader}}>
+                                        <Text style={{fontSize: pTd(28), color: '#a49997'}}>{title}</Text>
+                                    </View>
+                                </TouchableWithoutFeedback>
                             )}
                             renderItem={({item}) => (
-                                <FileItem 
-                                    type={item.type} 
-                                    size={item.size} 
-                                    name={item.name} 
-                                    path={item.path} 
+                                <CFileItem
+                                    type={item.type}
+                                    size={item.size}
+                                    name={item.name}
+                                    path={item.path}
                                     fn={()=>{if (item.type==='dir') {props.setFilePath(item.path)}}}
-                                    checkfn={(checked)=>that.selectItem(checked, item)} 
-                                    checked={item.checked} 
+                                    checkfn={(checked)=>that.selectItem(checked, item)}
+                                    checked={item.checked}
                                     hasAddShelft={item.hasAddShelft}
                                     scrollItemHeight={props.scrollItemHeight}
                                     scrollItemBorder={props.scrollItemBorder}/>
@@ -143,7 +171,7 @@ export default class FilesTree extends Component{
                                 <Text style={{fontSize: pTd(28)}}>项</Text>
                             </View>
                             <TouchableOpacity
-                                onPress={this.selectAll}>
+                                onPress={this.selectAll.bind(this)}>
                                 <View style={{width: pTd(140), flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                                     <Text style={{fontSize: pTd(30)}}>全选</Text>
                                 </View>
@@ -165,71 +193,55 @@ export default class FilesTree extends Component{
     }
 
     // 索引面板选择索引
-    selectIndex(capital, index){
+    selectIndex(capital: string, index: number){
         this.filespanel.setClose()
-        // for(let i=0; i< filesState.length; i++){
-        //     if(filesState[i].title === capital){
-        //         this.scrollview.scrollTo({
-        //             x: 0,
-        //             y: filesState[i].scroll[0]
-        //         })
-        //         break
-        //     }
-        // }
-        // const {scrollTop, sectionlistOffsetTop} = this.props
-        // that.stickyheader.measure((fx, fy, width, height, px, py) => {
-        //     console.log(fx, fy, width, height, px, py)
-        //     that.props.setStateData({
-        //         sectionlistOffsetTop: py + that.props.scrollItemHeaderHeight
-        //     })
-        // })
-        // this[capital].measure((fx, fy, width, height, px, py) => {
-        //     console.log(fx, fy, width, height, px, py)
-        //     this.scrollview.scrollTo({
-        //         x: 0,
-        //         y: scrollTop + py - sectionlistOffsetTop
-        //     })
-        // })
-
-        this[capital].measureLayout(findNodeHandle(this.sectionlist), (x, y, width, height) => {
-            this.scrollview.scrollTo({
-                x: 0,
-                y: y
+        const finditem = this.props.filesState.find((val)=>(val.title===capital))
+        if (typeof finditem !== 'undefined') {
+            this.sectionitems[finditem.title].measureLayout(findNodeHandle(this.sectionlist), (x, y, width, height) => {
+                this.scrollview.scrollTo({
+                    x: 0,
+                    y: y
+                })
             })
-        })
+        }
     }
 
     //初始化滚动
     initScroll(){
-        this.onScroll({
-            nativeEvent: {
-                contentOffset: {
-                    y: 0
-                }
-            }
-        })
+        // this.onScroll({
+        //     nativeEvent: {
+        //         contentOffset: {
+        //             y: 0
+        //         }
+        //     }
+        // })
     }
 
     // 滚动界面滚动
-    onScroll( {nativeEvent: {contentOffset: {y}} } ){
-        console.log(`scrollY: ${y}`)
-        this.props.setStateData({
-            scrollTop: y
-        })
-        const {filesState, indexes, setStateData} = this.props
-        let capital, index
-        for(let i=0;i<filesState.length; i++){
-            const file = filesState[i]
-            if (file.scroll[0] <= y && file.scroll[1] > y) {
-                capital = file.title
-                break
-            }
-        }
-        index = indexes.findIndex(index => (capital === index))
-        setStateData({
-            index: index
-        })
-    }    
+    // onScroll( {nativeEvent: {contentOffset: {y}} }: any ){
+    //     // console.log(`scrollY: ${y}`)
+    //     // this.props.setStateData({
+    //     //     scrollTop: y
+    //     // })
+    //     // const {filesState, indexes, setStateData} = this.props
+    //     // let capital, index
+    //     // for(let i=0;i<filesState.length; i++){
+    //     //     const file = filesState[i]
+    //     //     if (file.scroll[0] <= y && file.scroll[1] > y) {
+    //     //         capital = file.title
+    //     //         break
+    //     //     }
+    //     // }
+    //     // index = indexes.findIndex(index => (capital === index))
+    //     // setStateData({
+    //     //     index: index
+    //     // })
+    //     const index = this.props.filesState.findIndex((val)=>(val.scrollTop>y))
+    //     this.props.setStateData({
+    //         index: index - 1
+    //     })
+    //     console.log(y, index - 1)
+    // }    
 
     // 删除选择文件项
     deleteItem(){
@@ -262,7 +274,7 @@ export default class FilesTree extends Component{
     }
 
     // 单选文件项
-    selectItem(ck, it){
+    selectItem(ck: boolean, it: FileItem){
         let checked = !ck
         let {fileList, filesState, setStateData, selectNum} = this.props
         filesState.forEach(item => {
@@ -277,7 +289,7 @@ export default class FilesTree extends Component{
                 img: it.img,
                 name: it.name,
                 ext: it.type,
-                path: it.path  
+                path: it.path
             })
             setStateData({
                 fileList: fileList,
@@ -295,9 +307,9 @@ export default class FilesTree extends Component{
         }
     }
 
-    onSectionListLayout({nativeEvent: {layout: {x, y, width, height}}}){
-        console.log(x, y, width, height)
-    }
+    // onSectionListLayout({nativeEvent: {layout: {x, y, width, height}}}){
+    //     console.log(x, y, width, height)
+    // }
 }
 
 const styles = StyleSheet.create({

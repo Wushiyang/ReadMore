@@ -2,11 +2,12 @@
  * @flow
  */
 import React from 'react'
-import {View, StyleSheet, Text, Dimensions, ScrollView, StatusBar} from 'react-native'
+import {View, StyleSheet, Text, Dimensions, ScrollView, StatusBar, Modal, TouchableWithoutFeedback} from 'react-native'
 import {pTd, getNowTime, countPageFontNumber} from '../assets/js/utils'
 import Pdf from 'react-native-pdf'
 import RNFS from 'react-native-fs'
-import {Base64} from 'js-base64'
+import SvgGoback from '../assets/icon-goback2.svg'
+const Utf8 = require('../assets/js/utf8')
 
 const {height, width} = Dimensions.get('window')
 //页眉高度
@@ -24,24 +25,20 @@ const fontSize = Math.floor(pTd(35))
 //txt文字默认行高
 const lineHeight = Math.floor(fontSize * 1.2)
 //分段读取txt文件一次读取字节数
-const readLength = 1000
+const readLength = 80000
 //换页阈值
-const cpValue = Math.floor(width / 8)
+const cpValue = Math.floor(width / 10)
 const changPoint = cpValue > 30 ? cpValue : 30
 //页面换分3个区块
 const blockWidth = Math.floor(width / 3)
 const touchBlock = [blockWidth, width - blockWidth]
 
-console.log(contentHeight, contentWidth, lineHeight, fontSize, lineHeight)
-
 function PdfTemplate(props: any){
     return (
-        <View style={styles.container}>
-            <Pdf 
-                source={props.source}
-                style={styles.pdf}
-                onError={error => console.log(error)}/>
-        </View>
+        <Pdf 
+            source={props.source}
+            style={styles.pdf}
+            onError={error => console.log(error)}/>   
     )
 }
 
@@ -80,12 +77,36 @@ type State = {
     fileLoadPosition: number, //文件读取位置(字节)
     px: ?number,
     py: ?number,
-    flag: 'none' | 'left' | 'center' | 'right'
+    flag: | 'none' 
+    | 'lClick'  //左点
+    | 'cClick'  //中点
+    | 'rClick'  //右点
+    | 'lSlide'  //左滑
+    | 'rSlide'  //右滑
+    | 'upSlide' //上滑
+    | 'downSlide' //下滑
+    | 'lglClick' //长左点
+    | 'lgcClick' //长中点
+    | 'lgrClick' //长右点
+    | 'lglSlide' //长左滑
+    | 'lgrSlide' //长右滑
+    | 'lgupSlide' //长上滑
+    | 'lgdownSlide', //长下滑
+    menuVisible: boolean
 }
 
 let timer
 
 export default class ReadPage extends React.Component<Props, State>{
+
+    //冗余字符
+    rongYu = 4
+
+    //触摸时间戳
+    touchTimestamp = 0
+
+    //阻滞检测
+    stop = false
 
     constructor(){
         super()
@@ -103,31 +124,41 @@ export default class ReadPage extends React.Component<Props, State>{
             fileLoadPosition: 0,
             px: null,
             py: null,
-            flag: 'none'
+            flag: 'none',
+            menuVisible: false
         }
     }
 
     componentWillMount(){
         const type = this.props.navigation.getParam('type')
         const uri = this.props.navigation.getParam('uri')
-        const {fileLoadPosition} = this.state
+        //路由切换时clear计时器
+        this.props.navigation.addListener(
+            'willBlur',
+            () => {
+                timer && clearInterval(timer)
+            }
+        )
         this.setState({
             type: type,
             uri: uri
         })
-        //获取时间
-        timer = setInterval(()=>{
-            this.setState({
-                time: getNowTime()
-            })
-        }, 60000)
-        RNFS.stat(uri).then( result => {
-            let sz = +result.size
-            this.setState({
-                size: sz
-            })
-            this.readFile(uri, sz, fileLoadPosition, true)
-        }).catch(error => console.log(error))
+        if (type === 'txt') {
+            const {fileLoadPosition} = this.state
+            //自动更新时间
+            timer = setInterval(()=>{
+                this.setState({
+                    time: getNowTime()
+                })
+            }, 60000)
+            RNFS.stat(uri).then( result => {
+                let sz = +result.size
+                this.setState({
+                    size: sz
+                })
+                this.readFile(uri, sz, fileLoadPosition, true)
+            }).catch(error => console.log(error))
+        }
     }
 
     componentWillUnMount(){
@@ -136,44 +167,54 @@ export default class ReadPage extends React.Component<Props, State>{
 
     render(){
         const {state} = this 
-        const {type, txt, time, fontSize, readPP} = state
+        const {type, txt, time, fontSize, readPP, menuVisible} = state
         let content
         if (type === 'pdf') {
             content = (
-                <PdfTemplate source={{uri: this.state.uri}} />
+                <View 
+                    style={{flex: 1}}
+                    onStartShouldSetResponder={this.onTouchStart.bind(this)}
+                    onResponderRelease={this.onTouchRelease.bind(this)}
+                    onMoveShouldSetResponder={this.onShouldTouchMove.bind(this)}
+                    onResponderMove={this.onTouchMove.bind(this)}>
+                    <PdfTemplate source={{uri: this.state.uri}} />
+                </View>                
+
             )
         } else if (type === 'txt') {
             content = (
-                <TxtTemplate 
-                    time={time}
-                    font={fontSize}
-                    readPP={readPP}
-                    txt={txt}/>
+                <View 
+                    style={[styles.content, {top: menuVisible?-StatusBar.currentHeight:0}]}
+                    onStartShouldSetResponder={this.onTouchStart.bind(this)}
+                    onResponderRelease={this.onTouchRelease.bind(this)}
+                    onMoveShouldSetResponder={this.onShouldTouchMove.bind(this)}
+                    onResponderMove={this.onTouchMove.bind(this)}>
+                    <TxtTemplate 
+                        time={time}
+                        font={fontSize}
+                        readPP={readPP}
+                        txt={txt}/>
+                </View>
             )
         }
         return (
-            <View 
-                style={{flex: 1}}
-                // onStartShouldSetResponder={()=>true}
-                onStartShouldSetResponder={this.onTouchStart.bind(this)}
-                onResponderRelease={this.onTouchRelease.bind(this)}
-                onMoveShouldSetResponder={()=>true}
-                onResponderMove={this.onTouchMove.bind(this)}>
-                <StatusBar hidden={true} />
-                {/* <View style={{height: 24}}>
-                    <Text>x: {this.state.x.toFixed(2)} y: {this.state.y.toFixed(2)} px: {this.state.px.toFixed(2)} py: {this.state.py.toFixed(2)} StatusBar:{StatusBar.currentHeight}</Text>
-                </View> */}
+            <View style={styles.container}>
+                <StatusBar hidden={!menuVisible} />
                 {content}
+                <View style={[styles.menuTop, {top: menuVisible?0:-pTd(100)}]}>
+                    <SvgGoback width={pTd(48)} height={pTd(48)}/>
+                </View>
+                <View style={[styles.menuBottom, {bottom: menuVisible?0:-pTd(278)}]}></View>
             </View>
         )
     }
 
     // 百分比计算规则：
     //    ( 已读完的读取的字节 / 全文字节 + (读取长度 / 全文字节) * (分段点数组[分段点后点索引] / 分段点数组[分段点最后点索引]) ) * 100
-    changePage(flag: string){
+    changePage(next: boolean){
         const {readIndex, loadPointList, uri, fileLoadPosition, readTxt, size} = this.state
         let changeIndex, changeLoadPosition
-        if (flag === 'right') {
+        if (next) {
             changeIndex = readIndex + 1
             changeLoadPosition = fileLoadPosition + readLength
             if(changeIndex + 1 >= loadPointList.length){
@@ -189,7 +230,7 @@ export default class ReadPage extends React.Component<Props, State>{
                     readPP
                 })
             }
-        } else if (flag === 'left'){
+        } else {
             changeIndex = readIndex - 1
             changeLoadPosition = fileLoadPosition - readLength
             if(readIndex === 0){
@@ -212,8 +253,10 @@ export default class ReadPage extends React.Component<Props, State>{
     readFile(uri: string, size: number, fileLoadPosition: number, isStart: boolean){
         let that = this
         // RNFS.readFile(uri).then( result => {
-        RNFS.read(uri, readLength, fileLoadPosition, 'base64').then( base64 => {
-            let result = Base64.decode(base64)
+        RNFS.read(uri, readLength + that.rongYu, fileLoadPosition, 'ascii').then( ascii => {
+            let result = Utf8.decode(ascii)
+            //重置字节冗余
+            that.rongYu = 4
             const loadPointList = countPageFontNumber(contentHeight, contentWidth, lineHeight, fontSize, result)
             if (isStart === true) {
                 const readPP = (fileLoadPosition / size +  (readLength / size) * (loadPointList[1] / loadPointList[loadPointList.length - 1])) * 100
@@ -231,23 +274,43 @@ export default class ReadPage extends React.Component<Props, State>{
                     readTxt: result,
                     txt: result.substring(loadPointList[loadPointList.length - 2], loadPointList[loadPointList.length - 1]),
                     loadPointList: loadPointList,
-                    fileLoadPosition: fileLoadPosition,                    
+                    fileLoadPosition: fileLoadPosition,
                     readIndex: loadPointList.length - 2,
                     readPP: readPP
                 })
             }
-        }).catch(error => console.log(error))
+        }).catch(({message, stack}) => {
+            console.log(stack)
+            // if(message === 'Invalid byte index'){
+            //     that.rongYu--
+            //     that.readFile(uri, size, fileLoadPosition, isStart)
+            // } else if (message === 'Invalid UTF-8 detected') {
+            //     that.readFile(uri, size, fileLoadPosition, isStart)
+            // }
+        })
     }
 
     onTouchStart(event: any){
-        const {pageX, pageY} = event.nativeEvent
+        const {pageX, pageY, timestamp} = event.nativeEvent 
         let flag
+        this.touchTimestamp = timestamp
+        if (this.stop) {
+            return false
+        }
+        if (this.state.menuVisible===true) {
+            this.menuHide()
+            this.stop = true
+            setTimeout(()=>{
+                this.stop = false              
+            }, 300)
+            return false
+        }
         if (pageX < touchBlock[0]) {
-            flag = 'left'
+            flag = 'lClick'
         } else if (touchBlock[0] <= pageX && pageX <= touchBlock[1]) {
-            flag = 'center'            
+            flag = 'cClick'
         } else {
-            flag = 'right'
+            flag = 'rClick'
         }        
         this.setState({
             px: pageX,
@@ -257,41 +320,116 @@ export default class ReadPage extends React.Component<Props, State>{
         return true
     }
 
+    onShouldTouchMove(){
+        if (this.state.menuVisible===true || this.stop) {
+            return false
+        }
+        return true
+    }
+
     onTouchRelease(event: any){
-        const {flag} = this.state
-        if (flag === 'left') {
-            console.log('left')
-            this.changePage(flag)
-        } else if (flag === 'center') {
-            console.log('center')
-        } else if (flag === 'right') {
-            console.log('right')
-            this.changePage(flag)
+        let {flag, type} = this.state
+        const {timestamp} = event.nativeEvent
+        if (timestamp - this.touchTimestamp > 800) {
+            //长时触摸
+            flag = 'lg' + flag
+        }
+        console.log(flag)
+        if (type === 'txt') {
+            switch(flag){
+                case 'lClick': 
+                case 'lglClick':
+                case 'rSlide': 
+                case 'lgrSlide':                    
+                    this.changePage(false)
+                    break
+                case 'cClick':
+                    this.menuShow()
+                    break
+                case 'rClick': 
+                case 'lgrClick':
+                case 'lSlide': 
+                case 'lglSlide':
+                    this.changePage(true)
+                    break
+                case 'upSlide':
+                case 'lgupSlide':                    
+                case 'downSlide':
+                case 'lgdownSlide':
+                case 'lgcClick':                    
+                    break
+            }
+        } else if (type === 'pdf') {
+            switch(flag){
+                case 'lClick': 
+                case 'lglClick':
+                case 'lSlide': 
+                case 'lglSlide':
+                case 'rClick': 
+                case 'lgrClick':
+                case 'rSlide': 
+                case 'lgrSlide': 
+                case 'upSlide':
+                case 'downSlide':
+                case 'lgupSlide':
+                case 'lgdownSlide':                    
+                case 'lgcClick':
+                    break
+                case 'cClick':
+                    this.menuShow()
+                    break
+            }
         }
     }
 
     onTouchMove(event: any){
         const {pageX, pageY} = event.nativeEvent
         const {px, py} = this.state
-        if (typeof px === 'number') {
-            const move =  pageX - px
-            if (move > changPoint) {
+        if (typeof px === 'number' && typeof py === 'number') {
+            const moveX =  pageX - px
+            const moveY = pageY - py
+            if (moveX > changPoint) {
                 this.setState({
-                    flag: 'right'
+                    flag: 'rSlide'
                 })
-            } else if (move < -changPoint) {
+            } else if (moveX < -changPoint) {
                 this.setState({
-                    flag: 'left'
+                    flag: 'lSlide'
                 })            
+            } else if (moveY < -changPoint) {
+                this.setState({
+                    flag: 'upSlide'
+                })  
+            } else if (moveY > changPoint) {
+                this.setState({
+                    flag: 'downSlide'
+                })  
             }
         }
+    }
+
+    menuShow(){
+        this.setState({
+            menuVisible: true
+        })
+    }
+
+    menuHide(){
+        this.setState({
+            menuVisible: false
+        })
     }
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#000' 
+        width: pTd(750),
+        position: 'relative'
+    },
+    content: {
+        flex: 1,
+        position: 'absolute'
     },
     pdf: {
         flex: 1,
@@ -316,5 +454,25 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         height: footerHeight    
+    },
+    menuTop: {
+        backgroundColor: '#322320', 
+        height: pTd(100),
+        width: pTd(750),
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'absolute',
+        left: 0,
+        top: 0        
+    },
+    menuBottom: {
+        backgroundColor: '#322320', 
+        height: pTd(278),
+        width: pTd(750),
+        flexDirection: 'row',
+        alignItems: 'center',        
+        position: 'absolute',
+        left: 0,
+        bottom: 0
     }
 })

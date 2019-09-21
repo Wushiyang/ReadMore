@@ -872,6 +872,86 @@
     react-native-safe-area-view "^0.14.1"
     react-native-screens "^1.0.0 || ^1.0.0-alpha"
 
+"@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.npm.taobao.org/@svgr/babel-plugin-add-jsx-attribute/download/@svgr/babel-plugin-add-jsx-attribute-4.2.0.tgz#dadcb6218503532d6884b210e7f3c502caaa44b1"
+  integrity sha1-2ty2IYUDUy1ohLIQ5/PFAsqqRLE=
+
+"@svgr/babel-plugin-remove-jsx-attribute@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.npm.taobao.org/@svgr/babel-plugin-remove-jsx-attribute/download/@svgr/babel-plugin-remove-jsx-attribute-4.2.0.tgz#297550b9a8c0c7337bea12bdfc8a80bb66f85abc"
+  integrity sha1-KXVQuajAxzN76hK9/IqAu2b4Wrw=
+
+"@svgr/babel-plugin-remove-jsx-empty-expression@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.npm.taobao.org/@svgr/babel-plugin-remove-jsx-empty-expression/download/@svgr/babel-plugin-remove-jsx-empty-expression-4.2.0.tgz#c196302f3e68eab6a05e98af9ca8570bc13131c7"
+  integrity sha1-wZYwLz5o6ragXpivnKhXC8ExMcc=
+
+"@svgr/babel-plugin-replace-jsx-attribute-value@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.npm.taobao.org/@svgr/babel-plugin-replace-jsx-attribute-value/download/@svgr/babel-plugin-replace-jsx-attribute-value-4.2.0.tgz#310ec0775de808a6a2e4fd4268c245fd734c1165"
+  integrity sha1-MQ7Ad13oCKai5P1CaMJF/XNMEWU=
+
+"@svgr/babel-plugin-svg-dynamic-title@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.npm.taobao.org/@svgr/babel-plugin-svg-dynamic-title/download/@svgr/babel-plugin-svg-dynamic-title-4.3.1.tgz?cache=0&sync_timestamp=1561971406173&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40svgr%2Fbabel-plugin-svg-dynamic-title%2Fdownload%2F%40svgr%2Fbabel-plugin-svg-dynamic-title-4.3.1.tgz#646c2f5b5770c2fe318d6e51492344c3d62ddb63"
+  integrity sha1-ZGwvW1dwwv4xjW5RSSNEw9Yt22M=
+
+"@svgr/babel-plugin-svg-em-dimensions@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.npm.taobao.org/@svgr/babel-plugin-svg-em-dimensions/download/@svgr/babel-plugin-svg-em-dimensions-4.2.0.tgz#9a94791c9a288108d20a9d2cc64cac820f141391"
+  integrity sha1-mpR5HJoogQjSCp0sxkysgg8UE5E=
+
+"@svgr/babel-plugin-transform-react-native-svg@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.npm.taobao.org/@svgr/babel-plugin-transform-react-native-svg/download/@svgr/babel-plugin-transform-react-native-svg-4.2.0.tgz#151487322843359a1ca86b21a3815fd21a88b717"
+  integrity sha1-FRSHMihDNZocqGsho4Ff0hqItxc=
+
+"@svgr/babel-plugin-transform-svg-component@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.npm.taobao.org/@svgr/babel-plugin-transform-svg-component/download/@svgr/babel-plugin-transform-svg-component-4.2.0.tgz#5f1e2f886b2c85c67e76da42f0f6be1b1767b697"
+  integrity sha1-Xx4viGsshcZ+dtpC8Pa+Gxdntpc=
+
+"@svgr/babel-preset@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.npm.taobao.org/@svgr/babel-preset/download/@svgr/babel-preset-4.3.1.tgz#62ffcb85d756580e8ce608e9d2ac3b9063be9e28"
+  integrity sha1-Yv/LhddWWA6M5gjp0qw7kGO+nig=
+  dependencies:
+    "@svgr/babel-plugin-add-jsx-attribute" "^4.2.0"
+    "@svgr/babel-plugin-remove-jsx-attribute" "^4.2.0"
+    "@svgr/babel-plugin-remove-jsx-empty-expression" "^4.2.0"
+    "@svgr/babel-plugin-replace-jsx-attribute-value" "^4.2.0"
+    "@svgr/babel-plugin-svg-dynamic-title" "^4.3.1"
+    "@svgr/babel-plugin-svg-em-dimensions" "^4.2.0"
+    "@svgr/babel-plugin-transform-react-native-svg" "^4.2.0"
+    "@svgr/babel-plugin-transform-svg-component" "^4.2.0"
+
+"@svgr/core@^4.1.0":
+  version "4.3.2"
+  resolved "https://registry.npm.taobao.org/@svgr/core/download/@svgr/core-4.3.2.tgz#939c89be670ad79b762f4c063f213f0e02535f2e"
+  integrity sha1-k5yJvmcK15t2L0wGPyE/DgJTXy4=
+  dependencies:
+    "@svgr/plugin-jsx" "^4.3.2"
+    camelcase "^5.3.1"
+    cosmiconfig "^5.2.1"
+
+"@svgr/hast-util-to-babel-ast@^4.3.2":
+  version "4.3.2"
+  resolved "https://registry.npm.taobao.org/@svgr/hast-util-to-babel-ast/download/@svgr/hast-util-to-babel-ast-4.3.2.tgz#1d5a082f7b929ef8f1f578950238f630e14532b8"
+  integrity sha1-HVoIL3uSnvjx9XiVAjj2MOFFMrg=
+  dependencies:
+    "@babel/types" "^7.4.4"
+
+"@svgr/plugin-jsx@^4.3.2":
+  version "4.3.2"
+  resolved "https://registry.npm.taobao.org/@svgr/plugin-jsx/download/@svgr/plugin-jsx-4.3.2.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40svgr%2Fplugin-jsx%2Fdownload%2F%40svgr%2Fplugin-jsx-4.3.2.tgz#ce9ddafc8cdd74da884c9f7af014afcf37f93d3c"
+  integrity sha1-zp3a/IzddNqITJ968BSvzzf5PTw=
+  dependencies:
+    "@babel/core" "^7.4.5"
+    "@svgr/babel-preset" "^4.3.1"
+    "@svgr/hast-util-to-babel-ast" "^4.3.2"
+    svg-parser "^2.0.0"
+
 "@types/babel__core@^7.1.0":
   version "7.1.2"
   resolved "https://registry.npm.taobao.org/@types/babel__core/download/@types/babel__core-7.1.2.tgz#608c74f55928033fce18b99b213c16be4b3d114f"
@@ -1470,7 +1550,7 @@ camelcase@^4.1.0:
   resolved "https://registry.npm.taobao.org/camelcase/download/camelcase-4.1.0.tgz#d545635be1e33c542649c69173e5de6acfae34dd"
   integrity sha1-1UVjW+HjPFQmScaRc+Xeas+uNN0=
 
-camelcase@^5.0.0:
+camelcase@^5.0.0, camelcase@^5.3.1:
   version "5.3.1"
   resolved "https://registry.npm.taobao.org/camelcase/download/camelcase-5.3.1.tgz#e3c9b31569e106811df242f715725a1f4c494320"
   integrity sha1-48mzFWnhBoEd8kL3FXJaH0xJQyA=
@@ -1725,7 +1805,7 @@ core-util-is@1.0.2, core-util-is@~1.0.0:
   resolved "https://registry.npm.taobao.org/core-util-is/download/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
 
-cosmiconfig@^5.0.5:
+cosmiconfig@^5.0.5, cosmiconfig@^5.2.1:
   version "5.2.1"
   resolved "https://registry.npm.taobao.org/cosmiconfig/download/cosmiconfig-5.2.1.tgz#040f726809c591e77a17c0a3626ca45b4f168b1a"
   integrity sha1-BA9yaAnFked6F8CjYmykW08Wixo=
@@ -5060,6 +5140,14 @@ react-native-shadow@^1.2.2:
   resolved "https://registry.npm.taobao.org/react-native-shadow/download/react-native-shadow-1.2.2.tgz#08991cd14b71e32f2fc6363911c139d231949a66"
   integrity sha1-CJkc0Utx4y8vxjY5EcE50jGUmmY=
 
+react-native-svg-transformer@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.npm.taobao.org/react-native-svg-transformer/download/react-native-svg-transformer-0.13.0.tgz#ec0913f76d58c4df7092f52c98e8db368e5f894f"
+  integrity sha1-7AkT921YxN9wkvUsmOjbNo5fiU8=
+  dependencies:
+    "@svgr/core" "^4.1.0"
+    semver "^5.6.0"
+
 react-native-svg@^9.7.0:
   version "9.7.0"
   resolved "https://registry.npm.taobao.org/react-native-svg/download/react-native-svg-9.7.0.tgz#2d0bf1d31d5f1dd061587215b50deb29e626df18"
@@ -5942,6 +6030,11 @@ supports-color@^6.1.0:
   integrity sha1-B2Srxpxj1ayELdSGfo0CXogN+PM=
   dependencies:
     has-flag "^3.0.0"
+
+svg-parser@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.npm.taobao.org/svg-parser/download/svg-parser-2.0.2.tgz#d134cc396fa2681dc64f518330784e98bd801ec8"
+  integrity sha1-0TTMOW+iaB3GT1GDMHhOmL2AHsg=
 
 symbol-observable@^1.2.0:
   version "1.2.0"

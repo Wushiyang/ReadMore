@@ -10,30 +10,23 @@ import BookServer from '../servers/BookServer'
 import { GoBack } from '../components/common'
 import {connect} from 'react-redux'
 import {addBooksList} from '../redux/actions'
+import FilesTree from '../components/FilesTree'
 import type {BooksItem, Action} from '../redux/type'
 
-//滚动项高度
-const scrollItemHeaderHeight = pTd(70)
-//滚动项索引高度
-const scrollItemHeight = pTd(136)
-//滚动项上边框
-const scrollItemBorder = 1
-
-import FilesTree from '../components/FilesTree'
-
-type FileItem = {
+export type FileItem = {
     path: string,
     name: string,
     type: 'dir' | 'txt' | 'pdf',
     size: string,
     checked?: boolean,
-    hasAddShelft?: boolean
+    hasAddShelft?: boolean,
+    img?: string
 }
 
-type FilesStateItem = {
+export type FilesStateItem = {
     title: string,
     data: FileItem[],
-    scroll: [number, number]
+    scrollTop?: number
 }
 
 type Props = {
@@ -52,7 +45,12 @@ type State = {
     scrollTop: number
 }
 
-
+//滚动项高度
+const scrollItemHeaderHeight = pTd(70)
+//滚动项索引高度
+const scrollItemHeight = pTd(136)
+//滚动项上边框
+const scrollItemBorder = 1
 
 class ImportPage extends React.Component<Props, State>{
     static navigationOptions = {
@@ -74,7 +72,7 @@ class ImportPage extends React.Component<Props, State>{
         }
     }
 
-    async componentDidMount(){
+    componentDidMount(){
         this.setFilePath(ExternalStorageDirectoryPath)
     }
 
@@ -158,16 +156,16 @@ class ImportPage extends React.Component<Props, State>{
                         let {data, scroll} = (fileMap.get('文件夹'): any)
                         fileMap.set('文件夹', {
                             title: '文件夹',
-                            data: [...data, dir],
-                            scroll: [scroll[0], scroll[1] + scrollItemHeight + scrollItemBorder]
+                            data: [...data, dir]
+                            // scroll: [scroll[0], scroll[1] + scrollItemHeight + scrollItemBorder]
                         })
                         scrollTotal += scrollItemHeight + scrollItemBorder
                     } else {
                         fileMap.set('文件夹',
                             {
                                 title: '文件夹',
-                                data: [dir],
-                                scroll: [scrollTotal, scrollTotal + scrollItemHeaderHeight + scrollItemHeight + scrollItemBorder * 2]
+                                data: [dir]
+                                // scroll: [scrollTotal, scrollTotal + scrollItemHeaderHeight + scrollItemHeight + scrollItemBorder * 2]
                             }
                         )
                         scrollTotal += scrollItemHeaderHeight + scrollItemHeight + scrollItemBorder * 2
@@ -207,16 +205,16 @@ class ImportPage extends React.Component<Props, State>{
                             let {data, scroll} = (fileMap.get(capital): any)
                             fileMap.set(capital, {
                                 title: capital,
-                                data: [...data, file],
-                                scroll: [scroll[0], scroll[1] + scrollItemHeight + scrollItemBorder]
+                                data: [...data, file]
+                                // scroll: [scroll[0], scroll[1] + scrollItemHeight + scrollItemBorder]
                             })
                             scrollTotal += scrollItemHeight + scrollItemBorder
                         } else {
                             fileMap.set(capital,
                                 {
                                     title: capital,
-                                    data: [file],
-                                    scroll: [scrollTotal, scrollTotal + scrollItemHeaderHeight + scrollItemHeight + scrollItemBorder * 2]
+                                    data: [file]
+                                    // scroll: [scrollTotal, scrollTotal + scrollItemHeaderHeight + scrollItemHeight + scrollItemBorder * 2]
                                 }
                             )
                             scrollTotal += scrollItemHeaderHeight + scrollItemHeight + scrollItemBorder * 2

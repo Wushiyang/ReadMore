@@ -1,3 +1,4 @@
 {
-    "javascript.validate.enable": false
+    "javascript.validate.enable": false,
+    "flowide.pathToFlow": "H:\\project\\ReadMore\\client\\ReadMore\\node_modules\\flow-bin\\flow-win64-v0.106.3\\flow.exe"
 }
