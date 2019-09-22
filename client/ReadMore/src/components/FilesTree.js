@@ -2,7 +2,7 @@
  * @flow
  */
 import React,{ Component } from 'react'
-import {View, Text, StyleSheet, ScrollView, TouchableWithoutFeedback, TouchableOpacity, SectionList, findNodeHandle} from 'react-native'
+import {View, Text, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, SectionList, findNodeHandle} from 'react-native'
 import { pTd } from '../assets/js/utils'
 import IndexPanel from '../components/IndexPanel'
 import {BoxShadow} from 'react-native-shadow'
@@ -29,17 +29,12 @@ type state = {
 }
 export default class FilesTree extends Component<Props, state>{
 
-    scrollview: any
-
     filespanel: any
 
     sectionlist: any
 
-    sectionitems: Object = {}
-
     constructor(){
         super()
-        // this.onSectionListLayout = this.onSectionListLayout.bind(this)
     }
 
     render(){
@@ -108,60 +103,44 @@ export default class FilesTree extends Component<Props, state>{
         const curentIndex = props.filesState[props.index]
         return (
             <View style={styles.container}>
-                <ScrollView 
-                    style={styles.scroll}
-                    stickyHeaderIndices={[0]}
-                    ref={(scrollview) => {this.scrollview = scrollview}}
-                    // onScroll={that.onScroll.bind(this)}
-                    // scrollEventThrottle={0}
-                    alwaysBounceVertical={true}>
-                    {/* <TouchableWithoutFeedback 
-                        onPress={this.selectPanel.bind(this)}>
-                        <View 
-                            style={[styles.header, {height: props.scrollItemHeaderHeight}]}>
-                            <Text style={{fontSize: pTd(28), color: '#a49997'}}>{curentIndex && curentIndex.title}</Text>
+                <SectionList
+                    sections={props.filesState}
+                    ref={(sectionlist) => {that.sectionlist = sectionlist}}
+                    style={{width: '100%', backgroundColor: '#fff'}}
+                    keyExtractor={(item, index) => (index + '')}
+                    initialNumToRender={500}
+                    // getItemLayout={this.setItemLayout.bind(this)}
+                    stickySectionHeadersEnabled={true}
+                    ListEmptyComponent={()=>(
+                        <Text>加载中</Text>
+                    )}
+                    ItemSeparatorComponent={()=>(
+                        <View style={styles.itemSeparator}>
+                            <View style={{borderTopWidth: props.scrollItemBorder, borderTopColor: '#d3c4bf'}}></View>
                         </View>
-                    </TouchableWithoutFeedback> */}
-                    <View
-                        ref={(sectionlist) => {that.sectionlist = sectionlist}}>
-                        <SectionList
-                            sections={props.filesState}
-                            style={{width: '100%', backgroundColor: '#fff', paddingLeft: pTd(45), paddingRight: pTd(45)}}
-                            keyExtractor={(item, index) => (index + '')}
-                            initialNumToRender={500}
-                            renderSectionHeader={({section: {title}}) => (
-                                // <TouchableWithoutFeedback 
-                                //     onPress={this.selectPanel}>
-                                //     <View 
-                                //         style={[styles.fileHeader,{height: props.scrollItemHeaderHeight, borderTopWidth: props.scrollItemBorder}]}
-                                //         ref={(sectionHeader) => {that[title] = sectionHeader}}>
-                                //         <Text style={{fontSize: pTd(28), color: '#a49997'}}>{title}</Text>
-                                //     </View>
-                                // </TouchableWithoutFeedback>
-                                <TouchableWithoutFeedback 
-                                    onPress={this.selectPanel}>
-                                    <View
-                                        style={[styles.fileHeader,{height: props.scrollItemHeaderHeight, borderTopWidth: props.scrollItemBorder}]}
-                                        ref={(sectionHeader) => {this.sectionitems[title] = sectionHeader}}>
-                                        <Text style={{fontSize: pTd(28), color: '#a49997'}}>{title}</Text>
-                                    </View>
-                                </TouchableWithoutFeedback>
-                            )}
-                            renderItem={({item}) => (
-                                <CFileItem
-                                    type={item.type}
-                                    size={item.size}
-                                    name={item.name}
-                                    path={item.path}
-                                    fn={()=>{if (item.type==='dir') {props.setFilePath(item.path)}}}
-                                    checkfn={(checked)=>that.selectItem(checked, item)}
-                                    checked={item.checked}
-                                    hasAddShelft={item.hasAddShelft}
-                                    scrollItemHeight={props.scrollItemHeight}
-                                    scrollItemBorder={props.scrollItemBorder}/>
-                            )}/>
-                    </View>
-                </ScrollView>
+                    )}
+                    renderSectionHeader={({section: {title}}) => (
+                        <TouchableWithoutFeedback 
+                            onPress={this.selectPanel.bind(this)}>
+                            <View
+                                style={[styles.fileHeader, {height: props.scrollItemHeaderHeight}]}>
+                                <Text style={{fontSize: pTd(28), color: '#a49997'}}>{title}</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    )}
+                    renderItem={({item, index, section}) => (
+                        <CFileItem
+                            type={item.type}
+                            size={item.size}
+                            name={item.name}
+                            path={item.path}
+                            fn={()=>{if (item.type==='dir') {props.setFilePath(item.path)}}}
+                            checkfn={(checked)=>that.selectItem(checked, item)}
+                            checked={item.checked}
+                            hasAddShelft={item.hasAddShelft}
+                            // scrollItemBorder={props.scrollItemBorder}
+                            scrollItemHeight={props.scrollItemHeight} />
+                    )}/>
                 <BoxShadow setting={shadowOpt}>
                     <View style={styles.footer}>
                         <View style={styles.footer_left}>
@@ -187,6 +166,39 @@ export default class FilesTree extends Component<Props, state>{
         )
     }
 
+    //设置列表位置计算
+    //留白显示不好看 暂时不使用
+    // setItemLayout(data: FilesStateItem[], index: number){
+    //     const {scrollItemHeaderHeight, scrollItemHeight, scrollItemBorder} = this.props
+    //     let pos = [0, 0]
+    //     for(let item of data){
+    //         pos[0] = pos[1]
+    //         pos[1] = pos[1] + item.data.length + 1
+    //         if (index === pos[0]) {
+    //             return {
+    //                 index,
+    //                 offset: item.offsetTop,
+    //                 length: scrollItemHeaderHeight + scrollItemBorder
+    //             }
+    //         } else if (index === pos[1]) {
+    //             const dataIndex = index - pos[0] - 2              
+    //             return {
+    //                 index,
+    //                 offset: item.data[dataIndex].offsetTop + scrollItemHeight + scrollItemBorder,
+    //                 length: 0
+    //             }
+    //         } else if (index > pos[0] && index < pos[1]){
+    //             const dataIndex = index - pos[0] - 1
+    //             return {
+    //                 index,
+    //                 offset: item.data[dataIndex].offsetTop,
+    //                 length: scrollItemHeight + scrollItemBorder
+    //             }
+    //         }
+    //         pos[1]++
+    //     }
+    // }
+
     // 索引面板开启
     selectPanel(){
         this.filespanel.setOpen()
@@ -195,53 +207,19 @@ export default class FilesTree extends Component<Props, state>{
     // 索引面板选择索引
     selectIndex(capital: string, index: number){
         this.filespanel.setClose()
-        const finditem = this.props.filesState.find((val)=>(val.title===capital))
-        if (typeof finditem !== 'undefined') {
-            this.sectionitems[finditem.title].measureLayout(findNodeHandle(this.sectionlist), (x, y, width, height) => {
-                this.scrollview.scrollTo({
-                    x: 0,
-                    y: y
-                })
-            })
-        }
+        const {scrollItemHeaderHeight, scrollItemBorder} = this.props
+        const ind = this.props.filesState.findIndex((val)=>(val.title===capital))
+        this.sectionlist.scrollToLocation({
+            itemIndex: 0,
+            sectionIndex: ind,
+            viewOffset: scrollItemHeaderHeight + scrollItemBorder
+        })
     }
 
     //初始化滚动
     initScroll(){
-        // this.onScroll({
-        //     nativeEvent: {
-        //         contentOffset: {
-        //             y: 0
-        //         }
-        //     }
-        // })
-    }
 
-    // 滚动界面滚动
-    // onScroll( {nativeEvent: {contentOffset: {y}} }: any ){
-    //     // console.log(`scrollY: ${y}`)
-    //     // this.props.setStateData({
-    //     //     scrollTop: y
-    //     // })
-    //     // const {filesState, indexes, setStateData} = this.props
-    //     // let capital, index
-    //     // for(let i=0;i<filesState.length; i++){
-    //     //     const file = filesState[i]
-    //     //     if (file.scroll[0] <= y && file.scroll[1] > y) {
-    //     //         capital = file.title
-    //     //         break
-    //     //     }
-    //     // }
-    //     // index = indexes.findIndex(index => (capital === index))
-    //     // setStateData({
-    //     //     index: index
-    //     // })
-    //     const index = this.props.filesState.findIndex((val)=>(val.scrollTop>y))
-    //     this.props.setStateData({
-    //         index: index - 1
-    //     })
-    //     console.log(y, index - 1)
-    // }    
+    }
 
     // 删除选择文件项
     deleteItem(){
@@ -306,10 +284,6 @@ export default class FilesTree extends Component<Props, state>{
             })
         }
     }
-
-    // onSectionListLayout({nativeEvent: {layout: {x, y, width, height}}}){
-    //     console.log(x, y, width, height)
-    // }
 }
 
 const styles = StyleSheet.create({
@@ -317,17 +291,6 @@ const styles = StyleSheet.create({
         position: 'relative',
         width: '100%',
         flex: 1
-    },
-    scroll: {
-        flex: 1,
-        width: '100%',
-        // position: 'relative'
-    },
-    header: {
-        paddingLeft: pTd(40),
-        paddingRight: pTd(40),
-        backgroundColor: '#eee',
-        justifyContent: 'center'
     },
     footer: {
         height:　pTd(100),
@@ -352,17 +315,11 @@ const styles = StyleSheet.create({
     fileHeader: {
         paddingLeft: pTd(40),
         paddingRight: pTd(40),
-        backgroundColor: '#fff',
-        justifyContent: 'center',
-        borderTopColor: '#d3c4bf',        
+        backgroundColor: '#eee',
+        justifyContent: 'center'
+    },
+    itemSeparator: {
+        paddingLeft: pTd(40),
+        paddingRight: pTd(40)  
     }
-    // fileItem: {
-    //     height: scrollItemHeight,
-    //     width: '100%',
-    //     borderTopWidth: scrollItemBorder,
-    //     borderTopColor: '#d3c4bf',
-    //     flexDirection: 'row',
-    //     justifyContent: 'space-between',
-    //     alignItems: 'center'
-    // }
 })

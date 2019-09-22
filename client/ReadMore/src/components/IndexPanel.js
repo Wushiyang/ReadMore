@@ -1,6 +1,15 @@
+/**
+ * @flow
+ */
 import React, {Component} from 'react'
 import {View, Text, StyleSheet, TouchableWithoutFeedback, Modal, TouchableOpacity} from 'react-native'
 import {pTd} from '../assets/js/utils'
+
+type PanelIndex = {
+    name: string, 
+    active: boolean,
+    fn: ()=>void
+}
 
 function Box(props){
     if (props.active) {
@@ -20,7 +29,17 @@ function Box(props){
     )
 }
 
-export default class DropDown extends Component{
+type Props = {
+    data: PanelIndex[]
+}
+type State = {
+    visible: boolean
+}
+export default class DropDown extends Component<Props,State>{
+
+    setOpen: ()=>void
+
+    setClose: ()=>void
 
     constructor(){
         super()

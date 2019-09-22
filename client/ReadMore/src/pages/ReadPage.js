@@ -252,14 +252,15 @@ export default class ReadPage extends React.Component<Props, State>{
 
     readFile(uri: string, size: number, fileLoadPosition: number, isStart: boolean){
         let that = this
+        let actualReadLength = readLength < size ? readLength: size
         // RNFS.readFile(uri).then( result => {
-        RNFS.read(uri, readLength + that.rongYu, fileLoadPosition, 'ascii').then( ascii => {
+        RNFS.read(uri, actualReadLength + that.rongYu, fileLoadPosition, 'ascii').then( ascii => {
             let result = Utf8.decode(ascii)
             //重置字节冗余
             that.rongYu = 4
             const loadPointList = countPageFontNumber(contentHeight, contentWidth, lineHeight, fontSize, result)
             if (isStart === true) {
-                const readPP = (fileLoadPosition / size +  (readLength / size) * (loadPointList[1] / loadPointList[loadPointList.length - 1])) * 100
+                const readPP = (fileLoadPosition / size +  (actualReadLength / size) * (loadPointList[1] / loadPointList[loadPointList.length - 1])) * 100
                 that.setState({
                     readTxt: result,
                     txt: result.substring(0, loadPointList[1]),
@@ -269,7 +270,7 @@ export default class ReadPage extends React.Component<Props, State>{
                     readPP: readPP
                 })
             } else {
-                const readPP = (fileLoadPosition + readLength) / size * 100
+                const readPP = (fileLoadPosition + actualReadLength) / size * 100
                 that.setState({
                     readTxt: result,
                     txt: result.substring(loadPointList[loadPointList.length - 2], loadPointList[loadPointList.length - 1]),

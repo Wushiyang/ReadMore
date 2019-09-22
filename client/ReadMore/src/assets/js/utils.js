@@ -51,7 +51,9 @@ function countPageFontNumber(height, width, lineHeight, fontSize, txt){
             number = 0
         }
     })
-    pointList.push(txt.length)
+    if (txt.length > pointList[pointList.length]) {
+        pointList.push(txt.length)
+    }
     return pointList
 }
 

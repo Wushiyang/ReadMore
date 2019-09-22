@@ -21,12 +21,15 @@ export type FileItem = {
     checked?: boolean,
     hasAddShelft?: boolean,
     img?: string
+    //原本用来计算getItemLayout的参数
+    // offsetTop: number
 }
 
 export type FilesStateItem = {
     title: string,
-    data: FileItem[],
-    scrollTop?: number
+    data: FileItem[]
+    //原本用来计算getItemLayout的参数
+    // offsetTop: number
 }
 
 type Props = {
@@ -123,7 +126,7 @@ class ImportPage extends React.Component<Props, State>{
         let that = this
         const lastPath = this.state.path
         let fileMap = new Map<string, FilesStateItem>()
-        let scrollTotal = 0
+        // let offsetTopTotal = 0
         let filesState
         const { booksList } = this.props
         RNFS.readDir(path).then(result => {
@@ -141,7 +144,7 @@ class ImportPage extends React.Component<Props, State>{
                     }
                 }
             })
-            sortResult.forEach(val => {
+            sortResult.forEach((val, ind) => {
                 const capital = fitIndex(val.name)
                 //文件夹处理
                 if (val.isDirectory()) {
@@ -150,25 +153,27 @@ class ImportPage extends React.Component<Props, State>{
                         name: val.name,
                         type: 'dir',
                         size: val.size
+                        // offsetTop: offsetTopTotal
                     }
 
                     if (fileMap.has('文件夹')) {
-                        let {data, scroll} = (fileMap.get('文件夹'): any)
+                        let {data, offsetTop} = (fileMap.get('文件夹'): any)
                         fileMap.set('文件夹', {
                             title: '文件夹',
                             data: [...data, dir]
-                            // scroll: [scroll[0], scroll[1] + scrollItemHeight + scrollItemBorder]
+                            // offsetTop: offsetTop
                         })
-                        scrollTotal += scrollItemHeight + scrollItemBorder
+                        // offsetTopTotal += scrollItemHeight + scrollItemBorder
                     } else {
+                        // dir.offsetTop += scrollItemHeaderHeight + scrollItemBorder
                         fileMap.set('文件夹',
                             {
                                 title: '文件夹',
                                 data: [dir]
-                                // scroll: [scrollTotal, scrollTotal + scrollItemHeaderHeight + scrollItemHeight + scrollItemBorder * 2]
+                                // offsetTop: offsetTopTotal
                             }
                         )
-                        scrollTotal += scrollItemHeaderHeight + scrollItemHeight + scrollItemBorder * 2
+                        // offsetTopTotal += scrollItemHeaderHeight + scrollItemHeight + scrollItemBorder * 2
                     }
                 //文件处理
                 } else {
@@ -189,6 +194,7 @@ class ImportPage extends React.Component<Props, State>{
                             size: val.size,
                             checked: false,
                             hasAddShelft: hasAddShelft
+                            // offsetTop: offsetTopTotal
                         }
                     } else if (/\.pdf$/.test(val.name)) {
                         file = {
@@ -197,27 +203,29 @@ class ImportPage extends React.Component<Props, State>{
                             type: 'pdf',
                             size: val.size,
                             checked: false,
-                            hasAddShelft: hasAddShelft                                                                   
+                            hasAddShelft: hasAddShelft
+                            // offsetTop: offsetTopTotal                                                 
                         }
                     }
                     if (typeof file === 'object') {
                         if (fileMap.has(capital)) {
-                            let {data, scroll} = (fileMap.get(capital): any)
+                            let {data, offsetTop} = (fileMap.get(capital): any)
                             fileMap.set(capital, {
                                 title: capital,
                                 data: [...data, file]
-                                // scroll: [scroll[0], scroll[1] + scrollItemHeight + scrollItemBorder]
+                                // offsetTop: offsetTop
                             })
-                            scrollTotal += scrollItemHeight + scrollItemBorder
+                            // offsetTopTotal += scrollItemHeight + scrollItemBorder
                         } else {
+                            // file.offsetTop += scrollItemHeaderHeight + scrollItemBorder
                             fileMap.set(capital,
                                 {
                                     title: capital,
                                     data: [file]
-                                    // scroll: [scrollTotal, scrollTotal + scrollItemHeaderHeight + scrollItemHeight + scrollItemBorder * 2]
+                                    // offsetTop: offsetTopTotal　
                                 }
                             )
-                            scrollTotal += scrollItemHeaderHeight + scrollItemHeight + scrollItemBorder * 2
+                            // offsetTopTotal += scrollItemHeaderHeight + scrollItemHeight + scrollItemBorder * 2
                         }
                     }
                 }

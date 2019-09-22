@@ -77,7 +77,7 @@ export default class FileItem extends Component{
         return (
             <TouchableNativeFeedback
                 onPress={props.fn}>
-                <View style={[styles.fileItem, {height: props.scrollItemHeight, borderTopWidth: props.scrollItemBorder}]}>
+                <View style={[styles.fileItem, {height: props.scrollItemHeight}]}>
                     <View>
                         <Text style={{marginBottom: pTd(28), fontSize: pTd(30)}}>{props.name}</Text>
                         {Info}
@@ -95,6 +95,8 @@ const styles = StyleSheet.create({
         borderTopColor: '#d3c4bf',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingLeft: pTd(40),
+        paddingRight: pTd(40)
     }
 })
