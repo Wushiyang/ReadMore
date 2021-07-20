@@ -23,7 +23,7 @@
     "pinyin": "^2.9.0",
     "react": "16.8.3",
     "react-clusterize": "^0.2.2",
-    "react-native": "0.59.9",
+    "react-native": "0.62.3",
     "react-native-battery": "^0.1.17",
     "react-native-checkbox": "^2.0.0",
     "react-native-fs": "^2.13.3",
